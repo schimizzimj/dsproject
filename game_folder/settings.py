@@ -10,8 +10,8 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 
 # game settings
-WIDTH = 1024 # 64 * 16
-HEIGHT = 768 # 48 * 16
+WIDTH = 512 # 32 * 16
+HEIGHT = 384 # 24 * 16
 FPS = 60
 TITLE = "ND Adventure"
 BGCOLOR = DARKGREY
