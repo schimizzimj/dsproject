@@ -43,21 +43,24 @@ class TiledMap:
 		return temp_surface
 
 class Camera:
-	def __init__(self, width, height):
-		self.camera = pg.Rect(0, 0, width, height)
-		self.width = width
-		self.height = height
+  def __init__(self, width, height):
+    self.camera = pg.Rect(0, 0, width, height)
+    self.width = width
+    self.height = height
 
-	def apply(self, entity):
-		return entity.rect.move(self.camera.topleft)
+  def apply(self, entity):
+    return entity.rect.move(self.camera.topleft)
 
-	def update(self, target):
-		x = -target.rect.x + int(WIDTH / 2)
-		y = -target.rect.y + int(HEIGHT / 2)
+  def apply_rect(self, rect):
+    return rect.move(self.camera.topleft)
 
-		# limit scrolling
-		x = min(0, x)
-		x = max(-(self.width - WIDTH), x)
-		y = min(0, y)
-		y = max(-(self.height - HEIGHT), y)
-		self.camera = pg.Rect(x, y, self.width, self.height)
+  def update(self, target):
+    x = -target.rect.x + int(WIDTH / 2)
+    y = -target.rect.y + int(HEIGHT / 2)
+
+    # limit scrolling
+    x = min(0, x)
+    x = max(-(self.width - WIDTH), x)
+    y = min(0, y)
+    y = max(-(self.height - HEIGHT), y)
+    self.camera = pg.Rect(x, y, self.width, self.height)
