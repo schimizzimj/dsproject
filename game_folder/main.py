@@ -7,6 +7,7 @@ from settings import *
 from sprites import *
 from tilemap import *
 from pytmx.util_pygame import load_pygame
+
 class Game:
 	def __init__(self):
 		pg.init()
@@ -34,12 +35,13 @@ class Game:
 		#			Wall(self, col, row)
 		#		if tile =='P':
 		#			self.player = Player(self, col, row)
-		for tile_object in self.map.tmxdata.objects:
-			if tile_object.name == 'player':
-				self.player = Player(self, tile_object.x, tile_object.y)
-			if tile_object.name == 'wall':
-				Obstacle(self, tile_object.x, tile_object.y,
-							tile_object.width, tile_object.height)
+		#for tile_object in self.map.tmxdata.objects:
+			#if tile_object.name == 'player':
+			#	self.player = Player(self, tile_object.x, tile_object.y)
+			#if tile_object.name == 'wall':
+			#	Obstacle(self, tile_object.x, tile_object.y,
+			#				tile_object.width, tile_object.height)
+		self.player = Player(self, 10, 10)
 		self.camera = Camera(self.map.width, self.map.height)
 
 	def run(self):
@@ -71,7 +73,7 @@ class Game:
 		for sprite in self.all_sprites:
 			self.screen.blit(sprite.image, self.camera.apply(sprite))
 		pg.display.flip()
-
+    
 	def events(self):
 		for event in pg.event.get():
 			if event.type == pg.QUIT:
@@ -80,6 +82,12 @@ class Game:
 				if event.key == pg.K_ESCAPE:
 					self.quit()
 
+	def show_start_screen(self):
+        	pass
+
+	def show_go_screen(self):
+        	pass
+    
 # create game object
 g = Game()
 g.show_start_screen()
@@ -89,3 +97,5 @@ while True:
 	g.show_go_screen()
 
 pg.quit()
+
+

@@ -30,7 +30,9 @@ class Player(pg.sprite.Sprite):
 		self.groups = game.all_sprites
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
-		self.image = game.player_img
+		# self.image = game.player_img
+		self.image = pg.Surface((TILESIZE, TILESIZE))
+		self.image.fill(RED)
 		self.rect = self.image.get_rect()
 		self.vel = vec(0, 0)
 		self.pos = vec(x, y) * TILESIZE
