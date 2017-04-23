@@ -80,12 +80,6 @@ class Game:
 				if event.key == pg.K_ESCAPE:
 					self.quit()
 
-	def show_start_screen(self):
-		pass
-
-	def show_go_screen(self):
-		pass
-
 # create game object
 g = Game()
 g.show_start_screen()
