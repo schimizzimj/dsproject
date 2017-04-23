@@ -67,7 +67,7 @@ class Game:
 	def draw(self):
 		pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
 		self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
-		self.draw_grid()
+		# self.draw_grid()
 		for sprite in self.all_sprites:
 			self.screen.blit(sprite.image, self.camera.apply(sprite))
 		pg.display.flip()
