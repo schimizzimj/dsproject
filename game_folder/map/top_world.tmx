@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="48" tilewidth="16" tileheight="16" nextobjectid="11">
  <tileset firstgid="1" name="roguelikeSheet_transparent" tilewidth="16" tileheight="16" spacing="1" tilecount="1767" columns="57">
-  <image source="../../../Tiled/Spritesheet/roguelikeSheet_transparent.png" width="968" height="526"/>
+  <image source="../assets/roguelikeSheet_transparent.png" width="968" height="526"/>
  </tileset>
  <tileset firstgid="1768" name="roguelikeCity_magenta" tilewidth="16" tileheight="16" spacing="1" tilecount="1036" columns="37">
-  <image source="../../../Tiled/Spritesheet/roguelikeCity_magenta.png" width="628" height="475"/>
+  <image source="../assets/roguelikeCity_magenta.png" width="628" height="475"/>
  </tileset>
  <tileset firstgid="2804" name="rsz_rpgpack_sheet" tilewidth="16" tileheight="16" tilecount="260" columns="20">
-  <image source="../../../Tiled/16px/rsz_rpgpack_sheet.png" width="320" height="208"/>
+  <image source="../assets/rsz_rpgpack_sheet.png" width="320" height="208"/>
  </tileset>
  <layer name="Tile Layer 1" width="64" height="48">
   <data encoding="csv">
