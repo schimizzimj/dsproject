@@ -19,45 +19,29 @@ class DataStructures:
 
 	def load_data(self):
 		game_folder = path.dirname(__file__)
-		img_folder = path.join(game_folder, 'img')
+		img_folder = path.join(game_folder, 'assets'); 
 		map_folder = path.join(game_folder, 'map')
-		self.map = TiledMap(path.join(map_folder, 'debart141.tmx'))
+		self.map = TiledMap(path.join(map_folder, 'data_structures.tmx'))
 		self.map_img = self.map.make_map()
 		self.map_rect = self.map_img.get_rect()
-		self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+		self.player_img = pg.image.load(path.join('img', PLAYER_IMG)).convert_alpha()
 
-	def new(self):
-		self.all_sprites = pg.sprite.Group()
-		self.walls = pg.sprite.Group()
-		# for row, tiles in enumerate(self.map.data):
-		# 	for col, tile in enumerate(tiles):
-		# 		if tile == '1':
-		#			Wall(self, col, row)
-		#		if tile =='P':
-		#			self.player = Player(self, col, row)
-		for tile_object in self.map.tmxdata.objects:
-			if tile_object.name == 'player':
-				self.player = Player(self, tile_object.x, tile_object.y)
-			if tile_object.name == 'wall':
-				Obstacle(self, tile_object.x, tile_object.y,
-							tile_object.width, tile_object.height)
-		self.camera = Camera(self.map.width, self.map.height)
 
 	def run(self):
 		self.running = True
 		while self.running:
 			self.dt = self.clock.tick(FPS) / 1000.0
 			self.events()
-			self.update()
+            #	self.update()
 			self.draw()
 
 	def quit(self):
 		pg.quit()
 		sys.exit()
 
-	def update(self):
-		self.all_sprites.update()
-		self.camera.update(self.player)
+#def update(self):
+#	self.all_sprites.update()
+#		self.camera.update(self.player)
 
 	def draw_grid(self):
 		for x in range(0, WIDTH, TILESIZE):
@@ -67,10 +51,10 @@ class DataStructures:
 
 	def draw(self):
 		pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-		self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+        #self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
 		# self.draw_grid()
-		for sprite in self.all_sprites:
-			self.screen.blit(sprite.image, self.camera.apply(sprite))
+        #	for sprite in self.all_sprites:
+        #	self.screen.blit(sprite.image, self.camera.apply(sprite))
 		pg.display.flip()
 
 	def events(self):
@@ -91,7 +75,7 @@ class DataStructures:
 classroom = DataStructures()
 classroom.show_start_screen()
 while True:
-	classroom.new()
+    #classroom.new()
 	classroom.run()
 	classroom.show_go_screen()
 
