@@ -1,4 +1,4 @@
-#! /usr/bin/env python2.7-32
+#! /usr/bin/env python2.7.32
 
 import pygame
 screen = pygame.display.set_mode((640,400))

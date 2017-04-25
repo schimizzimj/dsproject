@@ -8,10 +8,13 @@ LIGHTGREY = (100, 100, 100)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+CYAN = (0, 255, 255)
 
 # game settings
 WIDTH = 512 # 32 * 16
-HEIGHT = 384 # 24 * 16
+HEIGHT = 288 # 24 * 16
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
 FPS = 60
 TITLE = "ND Adventure"
 BGCOLOR = DARKGREY
@@ -23,4 +26,4 @@ GRIDHEIGHT = HEIGHT / TILESIZE
 #player settings
 PLAYER_SPEED = 125
 PLAYER_IMG = 'temp.png'
-
+PLAYER_HIT_RECT = pg.Rect(0, 0, 16, 16)

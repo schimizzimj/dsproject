@@ -30,13 +30,14 @@ class Player(pg.sprite.Sprite):
 		self.groups = game.all_sprites
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
-		# self.image = game.player_img
-		self.image = pg.Surface((TILESIZE, TILESIZE))
-		self.image.fill(RED)
+		self.image = game.player_img
 		self.vel = vec(0, 0)
-		self.pos = vec(x, y) * TILESIZE
+		self.pos = vec(x, y)
 		self.rect = self.image.get_rect()
 		self.rect.center = self.pos
+		self.hit_rect = PLAYER_HIT_RECT
+		self.hit_rect.center = self.rect.center
+		
 
 	def get_keys(self):
 		self.vel = vec(0, 0)
@@ -57,8 +58,11 @@ class Player(pg.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.center = self.pos
 		self.pos += self.vel * self.game.dt
+		self.hit_rect.centerx = self.pos.x
 		collide_with_walls(self, self.game.walls, 'x')
+		self.hit_rect.centery = self.pos.y
 		collide_with_walls(self, self.game.walls, 'y')
+		self.rect.center = self.hit_rect.center
 
 class Obstacle(pg.sprite.Sprite):
 	def __init__(self, game, x, y, w, h):

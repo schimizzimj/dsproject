@@ -109,7 +109,7 @@ class Menu():
  
             for item in self.items:
                 if item.mouse_hover(pygame.mouse.get_pos()):
-			item.set_color((255, 0, 0))
+			item.set_color((0, 150, 0))
 			item.set_italic(True)
 		else:
 			item.set_color((255, 255, 255))
