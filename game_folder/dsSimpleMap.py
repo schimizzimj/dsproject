@@ -19,9 +19,21 @@ class dsSimpleMap:
     def disp_background(self):
         self.screen.fill(WHITE)
         xOff = 30
-        self.make_stairs(xOff, 50, 'l')
-        self.make_stairs(WIDTH-xOff, 50, 'r')
-        self.make_stairs(WIDTH/2, 50, 's')
+        yOff = 50
+        self.draw_wall_and_floor(yOff + 10*12)
+        self.draw_doors(xOff, yOff)
+        self.draw_doors(WIDTH-2*xOff, yOff)
+        self.draw_doors(WIDTH/2-.5*xOff, yOff)
+        self.make_stairs(xOff, yOff, 'l')
+        self.make_stairs(WIDTH-xOff, yOff, 'r')
+        self.make_stairs(WIDTH/2, yOff, 's')
+    
+    def draw_doors(self, x, y):
+        w = 30
+        pg.draw.rect(self.screen, BROWN, pg.Rect(x, 0, w, y))
+        pg.draw.rect(self.screen, BLACK, pg.Rect(x, 0, w, y), 2)
+        pg.draw.rect(self.screen, BLACK, pg.Rect(x+w/4, w/4, w/2, w/2), 1)
+        pg.draw.rect(self.screen, BLACK, pg.Rect(x+w/4, w*7/8, w/2, w/2), 1)
     
     def make_stairs(self, xi, yi, dir):
         h = 10
@@ -34,7 +46,8 @@ class dsSimpleMap:
             xi = xi - w
         elif dir is 'l':
             # draw background
-            self.draw_wall_and_floor(yi+h*numStairs)
+            #     self.draw_wall_and_floor(yi+h*numStairs)
+            pass
         # stairs in middle
         elif dir is 's':
             shift = 0
