@@ -6,13 +6,15 @@ from os import path
 from settings import *
 from sprites import *
 from tilemap import *
+import spritesheet
 from pytmx.util_pygame import load_pygame
 
 class Game:
 	def __init__(self):
 		pg.init()
-		self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-		pg. display.set_caption(TITLE)
+		self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+		self.background = pg.Surface((WIDTH, HEIGHT))
+		pg.display.set_caption(TITLE)
 		self.clock = pg.time.Clock()
 		pg.key.set_repeat(500, 100)
 		self.load_data()
@@ -24,7 +26,9 @@ class Game:
 		self.map = TiledMap(path.join(map_folder, 'top_world.tmx'))
 		self.map_img = self.map.make_map()
 		self.map_rect = self.map_img.get_rect()
-		self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+		ss = spritesheet.spritesheet(path.join(img_folder, 'temp.png'))
+		self.player_img = ss.image_at((0, 0, 32, 42))
+		self.player_img = pg.transform.scale(self.player_img, (16, 16))
 
 	def new(self):
 		self.all_sprites = pg.sprite.Group()
@@ -40,12 +44,14 @@ class Game:
 				Obstacle(self, tile_object.x, tile_object.y,
 							tile_object.width, tile_object.height)
 			if tile_object.name == 'player':
-				self.player = Player(self, 20, 20);
+				self.player = Player(self, tile_object.x, tile_object.y);
 		self.camera = Camera(self.map.width, self.map.height)
+		self.draw_debug = False
 
 	def run(self):
 		self.running = True
 		while self.running:
+			print self.player.pos
 			self.dt = self.clock.tick(FPS) / 1000.0
 			self.events()
 			self.update()
@@ -67,12 +73,19 @@ class Game:
 
 	def draw(self):
 		pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-		self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+		self.background.blit(self.map_img, self.camera.apply_rect(self.map_rect))
 		# self.draw_grid()
 		for sprite in self.all_sprites:
-			self.screen.blit(sprite.image, self.camera.apply(sprite))
+			self.background.blit(sprite.image, self.camera.apply(sprite))
+			if self.draw_debug:
+				pg.draw.rect(self.background, CYAN, self.camera.apply_rect(wall.rect), 1)
+		if self.draw_debug:
+			for wall in self.walls:
+				pg.draw.rect(self.background, CYAN, self.camera.apply_rect(wall.rect), 1)
+		pg.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT), self.screen)
+		#self.screen.blit(self.background, (0,0))
 		pg.display.flip()
-    
+
 	def events(self):
 		for event in pg.event.get():
 			if event.type == pg.QUIT:
@@ -80,13 +93,15 @@ class Game:
 			if event.type == pg.KEYDOWN:
 				if event.key == pg.K_ESCAPE:
 					self.quit()
+				if event.key == pg.K_h:
+					self.draw_debug = not self.draw_debug
 
 	def show_start_screen(self):
         	pass
 
 	def show_go_screen(self):
         	pass
-    
+
 # create game object
 g = Game()
 g.show_start_screen()
@@ -96,5 +111,3 @@ while True:
 	g.show_go_screen()
 
 pg.quit()
-
-
