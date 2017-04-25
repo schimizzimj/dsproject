@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+import sys
 import pygame as pg
 import pytmx
 from pytmx.util_pygame import load_pygame
