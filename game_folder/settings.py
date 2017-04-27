@@ -13,6 +13,7 @@ GREENYELLOW = (50, 205, 50)
 BEIGE = (238, 223, 204)
 TEAL = (95, 158, 160)
 PURPLE = (147, 112, 219)
+BROWN = (139, 69, 19)
 
 # game settings
 WIDTH = 512 # 32 * 16
