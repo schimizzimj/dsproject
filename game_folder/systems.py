@@ -6,17 +6,19 @@ from settings import *
 from pygame.locals import *
 import spritesheet 
 
+sw = SCREEN_WIDTH
+sh = SCREEN_HEIGHT
+
 class spidey(object):
 	def __init__(self):
-		ss = spritesheet.spritesheet("img/UltimateSpiderman.gif")
-		self.image1 = ss.image_at((0, 0, 32, 32), colorkey = WHITE)
+		self.img1 = pygame.image.load("img/spiderman1.png")
 		self.pos = [SCREEN_WIDTH/2, SCREEN_HEIGHT * 0.8]
 		self.angle = 3.141592 / 2
 		self.exists = 1	
 	def draw(self, screen):
-		pygame.draw.rect(screen, (175, 175, 255), (self.pos[0] - 25, self.pos[1] - 40, 50, 80), 0)
-		pygame.screen.blit(self.image1, (self.pos[0] - 25, self.pos[1] - 40))
-		pygame.draw.line(screen, (255, 255, 255), (SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8), (SCREEN_WIDTH/2 + 40*math.cos(self.angle), SCREEN_HEIGHT*0.8 - 40*math.sin(self.angle)))
+		pygame.draw.rect(screen, (175, 175, 255), (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw, 0.08*sw, 0.12*sw), 0)
+		screen.blit(self.img1, (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw))
+		pygame.draw.line(screen, (255, 255, 255), (SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8), (SCREEN_WIDTH/2 + 50*math.cos(self.angle), SCREEN_HEIGHT*0.8 - 50*math.sin(self.angle)))
 class spidweb(object):
 	def __init__(self, ang, x, y):
 		self.vel = [2*math.cos(ang), -2*math.sin(ang)]
