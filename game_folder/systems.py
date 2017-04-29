@@ -12,12 +12,35 @@ sh = SCREEN_HEIGHT
 class spidey(object):
 	def __init__(self):
 		self.img1 = pygame.image.load("img/spiderman1.png")
+		self.img2 = pygame.image.load("img/spiderman2.png")
+		self.img3 = pygame.image.load("img/spiderman3.png")
+		self.img4 = pygame.image.load("img/spiderman3left.png")
+		self.img5 = pygame.image.load("img/spiderman2left.png")
+		self.img6 = pygame.image.load("img/spiderman1left.png")
 		self.pos = [SCREEN_WIDTH/2, SCREEN_HEIGHT * 0.8]
 		self.angle = 3.141592 / 2
+		self.status = 4
 		self.exists = 1	
 	def draw(self, screen):
 		pygame.draw.rect(screen, (175, 175, 255), (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw, 0.08*sw, 0.12*sw), 0)
-		screen.blit(self.img1, (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw))
+		if self.angle < 3.141592/6:
+			self.status = 1	
+			screen.blit(self.img1, (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw))
+		if self.angle >= 3.141592/6 and self.angle < 3.141592/3:	
+			self.status = 2
+			screen.blit(self.img2, (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw))
+		if self.angle >= 3.141592/3 and self.angle < 3.141592/2:	
+			self.status = 3
+			screen.blit(self.img3, (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw))
+		if self.angle >= 3.141592/2 and self.angle < 2*3.141592/3:	
+			self.status = 4
+			screen.blit(self.img4, (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw))
+		if self.angle >= 2*3.141592/3 and self.angle < 5*3.141592/6:	
+			self.status = 5
+			screen.blit(self.img5, (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw))
+		if self.angle > 5*3.141592/6:	
+			self.status = 6
+			screen.blit(self.img6, (self.pos[0] - 0.04*sw, self.pos[1] - 0.06*sw))
 		pygame.draw.line(screen, (255, 255, 255), (SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8), (SCREEN_WIDTH/2 + 50*math.cos(self.angle), SCREEN_HEIGHT*0.8 - 50*math.sin(self.angle)))
 class spidweb(object):
 	def __init__(self, ang, x, y):
