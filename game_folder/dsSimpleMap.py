@@ -5,14 +5,16 @@ import sys
 from os import path
 from settings import *
 from sprites import *
+import time
+
 
 class dsSimpleMap:
-    
     def __init__(self):
-        pg.init()
+        # pg.init()
+        print "initializng"
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
-        #self.clock = pg.time.Clock()
+        self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.disp_background()
         
@@ -72,12 +74,11 @@ class dsSimpleMap:
         else:
             color = PURPLE
         pg.draw.rect(self.screen, color, pg.Rect(x, y, s, s))
-        FONT = pg.font.Font(pg.font.get_default_font(), 12)
         text = FONT.render(name, True, BLACK)
         self.screen.blit(text, (x-s*.5, y+s*1.2))
-        self.draw_player(FONT, y, s)
+        self.draw_player(y, s)
             
-    def draw_player(self, FONT, y, s):
+    def draw_player(self, y, s):
         x = WIDTH*2/3
         pg.draw.rect(self.screen, RED, pg.Rect(x, y, s, s))
         text = FONT.render("You", True, BLACK)
@@ -85,6 +86,28 @@ class dsSimpleMap:
 
     def start_game(self, prof):
         self.draw_prof(prof)
+        time.sleep(1)
+        print "drawn prof"
+        self.message(prof)
+
+    def message(self, prof):
+        x = WIDTH/4
+        y = HEIGHT*2/3
+        greeting = "Welcome to Data Structures!"
+        text = FONT.render(greeting, True, BLACK)
+        self.screen.blit(text, (x, y))
+        pg.display.update()
+
+        if prof is 'Kumar':
+            msg = "Thanks for coming to class. A million points to you!"
+        else:
+            msg = "Are you excited for Demo Day? There will be lots of pizza."
+
+        time.sleep(2)
+        print "message"
+        text = FONT.render(msg, True, BLACK)
+        self.screen.blit(text, (x, y))
+        pg.display.update()
 
     def run(self):
         self.running = True
@@ -94,15 +117,24 @@ class dsSimpleMap:
             #self.events()
             #self.draw()
 
+pg.init()
+FONT = pg.font.Font(pg.font.get_default_font(), 12)
+
 # create game
 classroom = dsSimpleMap()
-classroom.start_game('Emrich')
+pg.display.update()
+
+prof = 'Kumar'
+if prof is 'Kumar':
+    classroom.start_game('Kumar')
+else:
+    classroom.start_game('Emrich')
 
 while True:
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
-            sys.exit()
-    pg.display.update()
+   for event in pg.event.get():
+       if event.type == pg.QUIT:
+           pg.quit()
+           sys.exit()
+       pg.display.update()
 
 
