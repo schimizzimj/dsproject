@@ -51,8 +51,8 @@ class spidey(object):
 		pygame.draw.line(screen, (255, 255, 255), (SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8-0.035*sw), (SCREEN_WIDTH/2 + 50*math.cos(self.angle), SCREEN_HEIGHT*0.8 - 50*math.sin(self.angle)-0.035*sw))
 class spidweb(object):
 	def __init__(self, ang, x, y):
-		self.vel = [2*math.cos(ang), -2*math.sin(ang)]
-		self.pos = [x, y]
+		self.vel = [3*math.cos(ang)*hr, -3*math.sin(ang)*hr]
+		self.pos = [float(x), float(y)]
 		self.age = 0
 		self.exists = 1
 		self.img1 = pygame.image.load("img/web.png")
@@ -60,20 +60,23 @@ class spidweb(object):
 		self.hei = int(self.img1.get_height()*hr)
 		self.img1 = pygame.transform.scale(self.img1, (self.wid, self.hei))
 	def draw(self, screen):
-		screen.blit(self.img1, (self.pos[0] - self.wid/2, self.pos[1] - self.hei/2))		
+		screen.blit(self.img1, (int(self.pos[0]) - self.wid/2, int(self.pos[1]) - self.hei/2))		
 	def adv(self):
 		self.pos[0] = self.pos[0] + self.vel[0]
 		self.pos[1] = self.pos[1] + self.vel[1]
 		self.age = self.age + 1
 class enemy(object):
 	def __init__(self, x, spd):
-		self.pos = [x, -10]
+		self.pos = [float(x), -40*hr]
 		self.wid = 60*wr
-		self.hei = 60*hr
-		self.speed = spd
+		self.hei = 40*hr
+		self.img1 = pygame.image.load("img/virus.png")
+		self.img1 = pygame.transform.scale(self.img1, (int(self.img1.get_width()*wr), int(self.img1.get_height()*hr)))
+		self.speed = spd*hr
 		self.exists = 1
 	def draw(self, screen):
-		pygame.draw.rect(screen, (255, 0, 0), (self.pos[0]-self.wid/2, self.pos[1]-self.hei/2, self.wid, self.hei), 0)
+		screen.blit(self.img1, (int(self.pos[0]) - self.img1.get_width()/2, int(self.pos[1]) - self.img1.get_height()/2))				
+		#pygame.draw.rect(screen, (255, 0, 0), (self.pos[0]-self.wid/2, self.pos[1]-self.hei/2, self.wid, self.hei), 0)
 	def adv(self):
 		self.pos[1] = self.pos[1] + self.speed
 class comput(object):
