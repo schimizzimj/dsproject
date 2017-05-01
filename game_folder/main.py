@@ -47,7 +47,7 @@ class Game:
 							2*tile_object.width, 2*tile_object.height)
 			if tile_object.name == 'player':
 				self.player = Player(self, 2*tile_object.x, 2*tile_object.y);
-		for x in range(0, random.randrange(6000, 10000)):
+		for x in range(0, random.randrange(5, 10)):
 			x_pos = (2 * self.map.width) * random.random()
 			y_pos = (2 * self.map.height) * random.random()
 			self.ai = AI(self, x_pos, y_pos)
