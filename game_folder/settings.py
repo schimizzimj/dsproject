@@ -20,10 +20,13 @@ BROWN = (160, 82, 45)
 # game settings
 WIDTH = 1024 # 32 * 16
 HEIGHT = 768 # 24 * 16
-SCREEN_SIZE = [1920, 1080]
+SCREEN_SIZE = [1280, 720]
 FPS = 30
 TITLE = "ND Adventure"
 BGCOLOR = DARKGREY
+
+MENU_ITEMS = ('Start', 'Settings', 'Highscore', 'Quit')
+
 
 TILESIZE = 16
 GRIDWIDTH = WIDTH / TILESIZE
