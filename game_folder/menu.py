@@ -5,6 +5,7 @@ import sys
 import os
 from settings import *
 from main import *
+import menus
 
 pygame.init()
 
@@ -38,9 +39,11 @@ class Item(pygame.font.Font):
 	return False
 
 class Menu():
-    def __init__(self, items, bg_color=(0,0,0), font=None,
+	def __init__(self, items, bg_color=(0,0,0), font=None,
                     font_color=(255, 255, 255)):
-		self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+		gameIcon = pygame.image.load('img/icon.png')
+		pygame.display.set_icon(gameIcon)
+		self.screen = pygame.display.set_mode((SCREEN_SIZE[0], SCREEN_SIZE[1]), 0, 32)
 		self.bg_color = bg_color
 		self.clock = pygame.time.Clock()
 
@@ -48,19 +51,27 @@ class Menu():
 		self.font = pygame.font.SysFont(font, FONT_SIZE)
 		self.font_color = ND_BLUE
 		self.functions = {'Start': self.run_game,
-     	 	      	  	  'Quit': sys.exit}
+     	 	      	  	  'Quit': sys.exit,
+						  'Settings': self.run_settings}
 		self.items = []
 		for index, item in enumerate(items):
 			menu_item = Item(item)
 
 			t_h = len(items) * menu_item.height # represents the height of the whole block of options
-			pos_x = (SCREEN_WIDTH / 2) - (menu_item.width / 2)
-			pos_y = (SCREEN_HEIGHT / 2) - (t_h / 2) + ((index * 2) + index * menu_item.height)
+			pos_x = (SCREEN_SIZE[0] / 2) - (menu_item.width / 2)
+			pos_y = (SCREEN_SIZE[1] / 2) - (t_h / 2) + ((index * 2) + index * menu_item.height)
 
 			menu_item.set_position(pos_x, pos_y)
 			self.items.append(menu_item)
 
-    def run(self):
+	def update_menu(self):
+		for index, item in enumerate(self.items):
+			t_h = len(self.items) * item.height
+			pos_x = (SCREEN_SIZE[0] / 2) - (item.width / 2)
+			pos_y = (SCREEN_SIZE[1] / 2) - (t_h / 2) + ((index * 2) + index * item.height)
+			item.set_position(pos_x, pos_y)
+
+	def run(self):
 		mainloop = True
 		while mainloop:
 			for event in pygame.event.get():
@@ -87,10 +98,10 @@ class Menu():
 					item.set_color(self.font_color)
 					item.set_underline(False)
 				self.screen.blit(item.label, item.position)
-
+			self.update_menu()
 			pygame.display.flip()
 
-    def run_game(self):
+	def run_game(self):
 		flag = True
 		g = Game()
 		g.show_start_screen()
@@ -99,6 +110,10 @@ class Menu():
 			if g.run() is False:
 				flag = False
 			g.show_go_screen()
+
+	def run_settings(self):
+		m = menus.setting()
+		m.run(self)
 
 
 menu_items = ('Start', 'Settings', 'Highscore', 'Quit')

@@ -15,7 +15,7 @@ class spidey(object):
 		self.exists = 1	
 	def draw(self, screen):
 		pygame.draw.rect(screen, (175, 175, 255), (self.pos[0] - 25, self.pos[1] - 40, 50, 80), 0)
-		pygame.screen.blit(self.image1, (self.pos[0] - 25, self.pos[1] - 40))
+		screen.blit(self.image1, (self.pos[0] - 25, self.pos[1] - 40))
 		pygame.draw.line(screen, (255, 255, 255), (SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8), (SCREEN_WIDTH/2 + 40*math.cos(self.angle), SCREEN_HEIGHT*0.8 - 40*math.sin(self.angle)))
 class spidweb(object):
 	def __init__(self, ang, x, y):

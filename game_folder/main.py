@@ -11,8 +11,8 @@ from pytmx.util_pygame import load_pygame
 
 class Game:
 	def __init__(self):
-		pg.init()
-		self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+		#pg.init()
+		self.screen = pg.display.set_mode((SCREEN_SIZE[0], SCREEN_SIZE[1]))
 		self.background = pg.Surface((WIDTH, HEIGHT))
 		pg.display.set_caption(TITLE)
 		self.clock = pg.time.Clock()
@@ -20,10 +20,10 @@ class Game:
 		self.load_data()
 
 	def load_data(self):
-		game_folder = path.dirname(__file__)
-		img_folder = path.join(game_folder, 'img')
-		map_folder = path.join(game_folder, 'map')
-		self.map = TiledMap(path.join(map_folder, 'top_world.tmx'))
+		self.game_folder = path.dirname(__file__)
+		self.img_folder = path.join(self.game_folder, 'img')
+		self.map_folder = path.join(self.game_folder, 'map')
+		self.map = TiledMap(path.join(self.map_folder, 'top_world.tmx'))
 		self.map_img = self.map.make_map()
 		self.overlay_img = self.map.make_overlay()
 		image_size = self.map_img.get_size()
@@ -34,6 +34,7 @@ class Game:
 	def new(self):
 		self.all_sprites = pg.sprite.Group()
 		self.walls = pg.sprite.Group()
+		self.entities = pg.sprite.Group()
 		# for row, tiles in enumerate(self.map.data):
 		# 	for col, tile in enumerate(tiles):
 		# 		if tile == '1':
@@ -46,7 +47,7 @@ class Game:
 							2*tile_object.width, 2*tile_object.height)
 			if tile_object.name == 'player':
 				self.player = Player(self, 2*tile_object.x, 2*tile_object.y);
-		for x in range(1, random.randrange(1, 6)):
+		for x in range(0, random.randrange(6000, 10000)):
 			x_pos = (2 * self.map.width) * random.random()
 			y_pos = (2 * self.map.height) * random.random()
 			self.ai = AI(self, x_pos, y_pos)
@@ -69,12 +70,23 @@ class Game:
 	def update(self):
 		self.all_sprites.update()
 		self.camera.update(self.player)
+		self.update_map()
 
 	def draw_grid(self):
 		for x in range(0, WIDTH, TILESIZE):
 			pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
 		for y in range(0, HEIGHT, TILESIZE):
 			pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+
+	def update_map(self):
+		if self.player.pos[0] > 1459 and self.player.pos[0] < 1490 and self.player.pos[1] == 1363 and self.player.dir.y == -1:
+			self.map = TiledMap(path.join(self.map_folder, 'debart.tmx'))
+	 		self.map_img = self.map.make_map()
+	 		self.overlay_img = self.map.make_overlay()
+	 		image_size = self.map_img.get_size()
+	 		self.map_img = pg.transform.scale(self.map_img, (2*image_size[0], 2*image_size[1]))
+	 		self.overlay_img = pg.transform.scale(self.overlay_img, (2*image_size[0], 2*image_size[1]))
+	 		self.map_rect = self.map_img.get_rect()
 
 	def draw(self):
 		pg.display.set_caption(TITLE + "\t\tFPS: " + "{:.2f}".format(self.clock.get_fps()))
@@ -88,7 +100,7 @@ class Game:
 			if self.draw_debug:
 				pg.draw.rect(self.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
 		self.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))
-		pg.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT), self.screen)
+		pg.transform.scale(self.background, (SCREEN_SIZE[0], SCREEN_SIZE[1]), self.screen)
 		pg.display.flip()
 
 	def events(self):

@@ -78,13 +78,13 @@ class Player(pg.sprite.Sprite):
 		image = ss.image_at((97, 145, 32, 48), colorkey = BLACK)
 		self.img_up.append(image)
 		self.image = self.img_down[0]
-
+		self.dir = vec(0, -1)
 		self.vel = vec(0, 0)
 		self.pos = vec(x, y)
 		self.rect = self.image.get_rect()
 		self.rect.center = self.pos
 		self.hit_rect = PLAYER_HIT_RECT
-		self.hit_rect.center = self.rect.center
+		self.hit_rect.center = (self.rect.center[0], self.rect.center[1])
 
 
 	def get_keys(self):
@@ -92,21 +92,24 @@ class Player(pg.sprite.Sprite):
 		keys = pg.key.get_pressed()
 		if keys[pg.K_UP] or keys[pg.K_w]:
 			frame = (self.pos.y // 30) % len(self.img_up)
-			print frame
 			self.vel.y = -PLAYER_SPEED
 			self.image = self.img_up[int(frame)]
+			self.dir.y = -1
 		if keys[pg.K_DOWN] or keys[pg.K_s]:
 			frame = (self.pos.y // 30) % len(self.img_down)
 			self.vel.y = PLAYER_SPEED
 			self.image = self.img_down[int(frame)]
+			self.dir.y = 1
 		if keys[pg.K_LEFT] or keys[pg.K_a]:
 			frame = (self.pos.x // 30) % len(self.img_left)
 			self.vel.x = -PLAYER_SPEED
 			self.image = self.img_left[int(frame)]
+			self.dir.x = -1
 		if keys[pg.K_RIGHT] or keys[pg.K_d]:
 			frame = (self.pos.x // 30) % len(self.img_right)
 			self.vel.x = PLAYER_SPEED
 			self.image = self.img_right[int(frame)]
+			self.dir.x = 1
 		if self.vel.x != 0 and self.vel.y != 0:
 			self.vel *= 0.7071
 
@@ -119,6 +122,10 @@ class Player(pg.sprite.Sprite):
 		collide_with_walls(self, self.game.walls, 'x')
 		self.hit_rect.centery = self.pos.y
 		collide_with_walls(self, self.game.walls, 'y')
+		self.hit_rect.centerx = self.pos.x
+		collide_with_walls(self, self.game.entities, 'x')
+		self.hit_rect.centery = self.pos.y
+		collide_with_walls(self, self.game.entities, 'y')
 		self.rect.center = self.hit_rect.center
 
 class Obstacle(pg.sprite.Sprite):
@@ -147,7 +154,7 @@ class Wall(pg.sprite.Sprite):
 
 class AI(pg.sprite.Sprite):
 	def __init__(self, game, x, y):
-		self.groups = game.all_sprites
+		self.groups = game.all_sprites, game.entities
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
 		random.seed(datetime.now())
@@ -196,7 +203,7 @@ class AI(pg.sprite.Sprite):
 		self.pos = vec(x, y)
 		self.rect = self.image.get_rect()
 		self.rect.center = self.pos
-		self.hit_rect = pg.Rect(0, 0, 32, 32)
+		self.hit_rect = pg.Rect(0, 0, 16, 16)
 		self.hit_rect.center = self.rect.center
 		self.step = 1001
 		self.wander_angle = 0
@@ -233,16 +240,16 @@ class AI(pg.sprite.Sprite):
 		self.move()
 
 		if self.vel.x > 0:
-			frame = (self.vel.x // 30) % len(self.img_right)
+			frame = (self.pos.x // 5) % len(self.img_right)
 			self.image = self.img_right[int(frame)]
 		elif self.vel.x < 0:
-			frame = (self.vel.x // 30) % len(self.img_left)
+			frame = (self.pos.x // 5) % len(self.img_left)
 			self.image = self.img_left[int(frame)]
 		elif self.vel.y > 0:
-			frame = (self.vel.y // 30) % len(self.img_down)
+			frame = (self.pos.y // 5) % len(self.img_down)
 			self.image = self.img_down[int(frame)]
 		else:
-			frame = (self.vel.y // 30) % len(self.img_up)
+			frame = (self.pos.y // 5) % len(self.img_up)
 			self.image = self.img_up[int(frame)]
 		self.rect = self.image.get_rect()
 		self.rect.center = self.pos
