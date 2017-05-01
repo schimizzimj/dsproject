@@ -1,16 +1,4 @@
 #!/usr/bin/env python2.7
-# As part of the Pitcher's Duel Project, I am conducting a comparative
-# analysis of pygame GUI modules, and publishing the results on my blog.
-# The comparison consists of implementing the same sample interface on
-# each of the various GUIs.
-#
-# This code implements the interface using the PGU GUI library, part of
-# Phil's pyGame Utilities.  For details on this library, see:
-# http://www.imitationpickles.org/pgu/
-#
-# The module author is: Phil Hassey
-#
-# This source code is the work of David Keeney, dkeeney at travelbyroad dot net
 
 #Import Modules
 import pygame

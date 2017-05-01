@@ -112,7 +112,7 @@ class Menu():
 			g.show_go_screen()
 
 	def run_settings(self):
-		m = menus.setting()
+		m = menus.setting(self.screen)
 		m.run(self)
 
 
