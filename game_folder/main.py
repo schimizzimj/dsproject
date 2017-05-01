@@ -35,13 +35,19 @@ class Game:
 		self.all_sprites = pg.sprite.Group()
 		self.walls = pg.sprite.Group()
 		self.entities = pg.sprite.Group()
+		# for row, tiles in enumerate(self.map.data):
+		# 	for col, tile in enumerate(tiles):
+		# 		if tile == '1':
+		#			Wall(self, col, row)
+		#		if tile =='P':
+		#			self.player = Player(self, col, row)
 		for tile_object in self.map.tmxdata.objects:
 			if tile_object.name == 'wall':
 				Obstacle(self, 2*tile_object.x, 2*tile_object.y,
 							2*tile_object.width, 2*tile_object.height)
 			if tile_object.name == 'player':
 				self.player = Player(self, 2*tile_object.x, 2*tile_object.y);
-		for x in range(0, random.randrange(5, 10)):
+		for x in range(0, random.randrange(6000, 10000)):
 			x_pos = (2 * self.map.width) * random.random()
 			y_pos = (2 * self.map.height) * random.random()
 			self.ai = AI(self, x_pos, y_pos)
@@ -66,6 +72,12 @@ class Game:
 		self.camera.update(self.player)
 		self.update_map()
 
+	def draw_grid(self):
+		for x in range(0, WIDTH, TILESIZE):
+			pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
+		for y in range(0, HEIGHT, TILESIZE):
+			pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+
 	def update_map(self):
 		if self.player.pos[0] > 1459 and self.player.pos[0] < 1490 and self.player.pos[1] == 1363 and self.player.dir.y == -1:
 			self.map = TiledMap(path.join(self.map_folder, 'debart.tmx'))
@@ -79,6 +91,7 @@ class Game:
 	def draw(self):
 		pg.display.set_caption(TITLE + "\t\tFPS: " + "{:.2f}".format(self.clock.get_fps()))
 		self.background.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+		# self.draw_grid()
 		if self.draw_debug:
 			for wall in self.walls:
 				pg.draw.rect(self.background, CYAN, self.camera.apply_rect(wall.rect), 1)

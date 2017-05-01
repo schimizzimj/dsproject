@@ -15,7 +15,6 @@ TEAL = (95, 158, 160)
 PURPLE = (147, 112, 219)
 ND_BLUE = (3, 45, 86)
 ND_GOLD = (157, 136, 57)
-BROWN = (160, 82, 45)
 
 # game settings
 WIDTH = 1024 # 32 * 16
