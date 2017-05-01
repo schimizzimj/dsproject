@@ -29,7 +29,7 @@ class spidey(object):
 		self.status = 4
 		self.exists = 1	
 	def draw(self, screen):
-		pygame.draw.rect(screen, (175, 175, 255), (self.pos[0] - 0.03*sw, self.pos[1] - 0.05*sw, 0.06*sw, 0.1*sw), 0)
+#		pygame.draw.rect(screen, (175, 175, 255), (self.pos[0] - 0.03*sw, self.pos[1] - 0.05*sw, 0.06*sw, 0.1*sw), 0)
 		if self.angle < 3.141592/6:
 			self.status = 1	
 			screen.blit(self.img1, (self.pos[0] - 0.05*sw, self.pos[1] - 0.06*sw))
@@ -60,7 +60,6 @@ class spidweb(object):
 		self.hei = int(self.img1.get_height()*hr)
 		self.img1 = pygame.transform.scale(self.img1, (self.wid, self.hei))
 	def draw(self, screen):
-		pygame.draw.circle(screen, (255, 255, 255), (int(self.pos[0]), int(self.pos[1])), 3)
 		screen.blit(self.img1, (self.pos[0] - self.wid/2, self.pos[1] - self.hei/2))		
 	def adv(self):
 		self.pos[0] = self.pos[0] + self.vel[0]
@@ -69,10 +68,12 @@ class spidweb(object):
 class enemy(object):
 	def __init__(self, x, spd):
 		self.pos = [x, -10]
+		self.wid = 60*wr
+		self.hei = 60*hr
 		self.speed = spd
 		self.exists = 1
 	def draw(self, screen):
-		pygame.draw.rect(screen, (255, 0, 0), (self.pos[0]-10, self.pos[1]-10, 20, 20), 0)
+		pygame.draw.rect(screen, (255, 0, 0), (self.pos[0]-self.wid/2, self.pos[1]-self.hei/2, self.wid, self.hei), 0)
 	def adv(self):
 		self.pos[1] = self.pos[1] + self.speed
 class comput(object):
@@ -81,20 +82,32 @@ class comput(object):
 		self.status = 0
 		self.counter = 0
 		self.exists = 1
+		self.img1 = pygame.image.load("img/computer.png")
+		self.imwid = int(self.img1.get_width()*wr)
+		self.imhei = int(self.img1.get_height()*hr)		
+		self.img1 = pygame.transform.scale(self.img1, (self.imwid, self.imhei))
+		self.img2 = pygame.image.load("img/explosion.png")
+		self.imwid2 = int(self.img1.get_width()*wr)
+		self.imhei2 = int(self.img1.get_height()*hr)
+		self.img2 = pygame.transform.scale(self.img2, (self.imwid2, self.imhei2))
+		self.tarwid = 120 * wr
+		self.tarhei = 120 * hr
 	def draw(self, screen):
 		if self.status == 0:
-			pygame.draw.rect(screen, (0, 255, 0), (self.pos[0] - 20, self.pos[1] - 20, 40, 40), 0)
+			screen.blit(self.img1, (self.pos[0] - self.imwid/2.65, self.pos[1] - self.imhei/3.3))			
+#			pygame.draw.rect(screen, (0, 255, 0), (self.pos[0] - self.tarwid/2, self.pos[1] - self.tarhei/2, self.tarwid, self.tarhei), 0)
 		if self.status == 1:
-			pygame.draw.rect(screen, (255, 255, 0), (self.pos[0] - 20, self.pos[1] - 20, 40, 40), 0)
+			screen.blit(self.img2, (self.pos[0] - self.imwid2/2, self.pos[1] - self.imhei2/2))			
+#			pygame.draw.rect(screen, (255, 255, 0), (self.pos[0] - self.tarwid/2, self.pos[1] - self.tarhei/2, self.tarwid, self.tarhei), 0)
 	def adv(self):
 		if self.status == 1:
 			self.counter = self.counter + 1
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.flip()
 over = 0
-enCounter = 1
+enCounter = 0
 swCounter = 1
-enList = [enemy(50, 1)]
+enList = [enemy(120, 1)]
 spidey1 = spidey()
 swList = []
 compList = [comput(SCREEN_WIDTH/11), comput(SCREEN_WIDTH/3), comput(2*SCREEN_WIDTH/3), comput(10*SCREEN_WIDTH/11)]
@@ -114,25 +127,24 @@ while over == 0:
 	if event.type == pygame.QUIT:
 		over = 3
 	if (enCounter % 100 == 0):
-		print "nothing"
-		#enList.append(enemy(random.randint(10, SCREEN_WIDTH-10), 1))
+		enList.append(enemy(random.randint(10, SCREEN_WIDTH-10), 1))
 	for foe in enList:
 		foe.adv()
 	for webs in swList:
 		webs.adv()
 	for comps in compList:
 		comps.adv()
-	compList = [ comps for comps in compList if comps.counter < 15 ]
+	compList = [ comps for comps in compList if comps.counter < 30 ]
 	for foe in enList:
 		for webs in swList:
-			if abs(foe.pos[0] - webs.pos[0]) < 10 and abs(foe.pos[1] - webs.pos[1]) < 10:
+			if abs(foe.pos[0] - webs.pos[0]) < webs.wid/5 + foe.wid/2 and abs(foe.pos[1] - webs.pos[1]) < webs.hei/5 + foe.hei/2:
 				webs.exists = 0
 				foe.exists = 0 
 	for foe in enList:
-		if foe.pos[1] > spidey1.pos[1] - 0.03*sw and abs(foe.pos[0]-spidey1.pos[0]) < 35:
+		if foe.pos[1] + foe.hei/2 > spidey1.pos[1] - 0.03*sw and abs(foe.pos[0]-spidey1.pos[0]) < foe.wid/2 + 0.05*sw:
 			over = 2
 		for comps in compList:
-			if foe.pos[1] > 3*SCREEN_HEIGHT/4 and abs(foe.pos[0] - comps.pos[0]) < 30:
+			if foe.pos[1]+foe.hei/2 > comps.pos[1]-comps.tarhei/2 and abs(foe.pos[0] - comps.pos[0]) < foe.wid/2 + comps.tarwid/2:
 				foe.exists = 0
 				comps.status = 1
 	if len(compList) == 0:
