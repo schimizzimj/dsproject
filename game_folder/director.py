@@ -12,12 +12,13 @@ class Director(object):
 	"""
 	def __init__(self):
 		gameIcon = pg.image.load('img/icon.png')
-		pg.display.set_icon(gameIcon)
+		pg.display.set_icon(gameIcon) # change icon in top left to ND
 		self.screen = pg.display.set_mode((SCREEN_SIZE[0], SCREEN_SIZE[1]), 0, 32)
 		self.scene = None
+		self.scene_stack = []
 		self.clock = pg.time.Clock()
 		self.running = True
-		pg.key.set_repeat(500, 100)
+		pg.key.set_repeat(500, 100) # allow holding of keys for program
 
 	def run(self):
 		while self.running:

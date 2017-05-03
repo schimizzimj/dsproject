@@ -7,33 +7,39 @@ import spritesheet
 import random
 from datetime import datetime
 import math
+import textbox
 vec = pg.math.Vector2
 
 def collide_with_walls(sprite, group, dir):
-    if dir == 'x':
-        hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
-        if hits:
-            if hits[0].rect.centerx > sprite.hit_rect.centerx:
-                sprite.pos.x = hits[0].rect.left - sprite.hit_rect.width / 2
-            if hits[0].rect.centerx < sprite.hit_rect.centerx:
-                sprite.pos.x = hits[0].rect.right + sprite.hit_rect.width / 2
-            sprite.vel.x = 0
-            sprite.hit_rect.centerx = sprite.pos.x
-    if dir == 'y':
-        hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
-        if hits:
-            if hits[0].rect.centery > sprite.hit_rect.centery:
-                sprite.pos.y = hits[0].rect.top - sprite.hit_rect.height / 2
-            if hits[0].rect.centery < sprite.hit_rect.centery:
-                sprite.pos.y = hits[0].rect.bottom + sprite.hit_rect.height / 2
-            sprite.vel.y = 0
-            sprite.hit_rect.centery = sprite.pos.y
+	'''
+	Checks for collisions between a sprite and any sprite group in a certain direction
+	'''
+	if dir == 'x':
+		hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+		if hits:
+			if hits[0].rect.centerx > sprite.hit_rect.centerx:
+				sprite.pos.x = hits[0].rect.left - sprite.hit_rect.width / 2
+			if hits[0].rect.centerx < sprite.hit_rect.centerx:
+				sprite.pos.x = hits[0].rect.right + sprite.hit_rect.width / 2
+			sprite.vel.x = 0
+			sprite.hit_rect.centerx = sprite.pos.x
+	if dir == 'y':
+		hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+		if hits:
+			if hits[0].rect.centery > sprite.hit_rect.centery:
+				sprite.pos.y = hits[0].rect.top - sprite.hit_rect.height / 2
+			if hits[0].rect.centery < sprite.hit_rect.centery:
+				sprite.pos.y = hits[0].rect.bottom + sprite.hit_rect.height / 2
+			sprite.vel.y = 0
+			sprite.hit_rect.centery = sprite.pos.y
 
 class Player(pg.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.all_sprites
+	def __init__(self, level, game, x, y, zoom):
+		self.groups = level.all_sprites
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
+		self.level = level
+		self.zoom = zoom # used to properly scale the player based on current environment
 
 		# Load player spritesheet
 		ss = spritesheet.spritesheet("img/lep.png")
@@ -78,17 +84,20 @@ class Player(pg.sprite.Sprite):
 		image = ss.image_at((97, 145, 32, 48), colorkey = BLACK)
 		self.img_up.append(image)
 		self.image = self.img_down[0]
-		self.dir = vec(0, -1)
-		self.vel = vec(0, 0)
-		self.pos = vec(x, y)
+		self.dir = vec(0, -1) # direction vector
+		self.vel = vec(0, 0) # velocity vector
+		self.pos = vec(x, y) # position vector
+
+		# create rect and hit_rect, scale them based on zoom settings
 		self.rect = self.image.get_rect()
+		self.rect = self.rect.inflate(self.rect.width * self.zoom, self.rect.height * self.zoom)
 		self.rect.center = self.pos
-		self.hit_rect = PLAYER_HIT_RECT
+		self.hit_rect = PLAYER_HIT_RECT.inflate(PLAYER_HIT_RECT.width * self.zoom, PLAYER_HIT_RECT.height * self.zoom)
 		self.hit_rect.center = (self.rect.center[0], self.rect.center[1])
 
 
 	def get_keys(self):
-		self.vel = vec(0, 0)
+		#self.vel = vec(0, 0)
 		keys = pg.key.get_pressed()
 		if keys[pg.K_UP] or keys[pg.K_w]:
 			frame = (self.pos.y // 30) % len(self.img_up)
@@ -116,21 +125,23 @@ class Player(pg.sprite.Sprite):
 	def update(self):
 		self.get_keys()
 		self.rect = self.image.get_rect()
+		self.rect.inflate_ip(self.rect.width * self.zoom, self.rect.height * self.zoom)
 		self.rect.center = self.pos
 		self.pos += self.vel * self.game.dt
 		self.hit_rect.centerx = self.pos.x
-		collide_with_walls(self, self.game.walls, 'x')
+		collide_with_walls(self, self.level.walls, 'x')
 		self.hit_rect.centery = self.pos.y
-		collide_with_walls(self, self.game.walls, 'y')
+		collide_with_walls(self, self.level.walls, 'y')
 		self.hit_rect.centerx = self.pos.x
-		collide_with_walls(self, self.game.entities, 'x')
-		self.hit_rect.centery = self.pos.y
-		collide_with_walls(self, self.game.entities, 'y')
-		self.rect.center = self.hit_rect.center
+		if self.level.name == 'top_world':
+			collide_with_walls(self, self.level.squirrels, 'x')
+			self.hit_rect.centery = self.pos.y
+			collide_with_walls(self, self.level.squirrels, 'y')
+			self.rect.center = self.hit_rect.center
 
 class Obstacle(pg.sprite.Sprite):
-	def __init__(self, game, x, y, w, h):
-		self.groups = game.walls
+	def __init__(self, level, game, x, y, w, h):
+		self.groups = level.walls
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
 		self.rect = pg.Rect(x, y, w, h)
@@ -139,25 +150,15 @@ class Obstacle(pg.sprite.Sprite):
 		self.rect.x = x
 		self.rect.y = y
 
-class Wall(pg.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.all_sprites, game.walls
+class Squirrels(pg.sprite.Sprite):
+	def __init__(self, level, game, x, y, zoom):
+		self.groups = level.all_sprites, level.squirrels
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
-		self.image = pg.Surface((TILESIZE, TILESIZE))
-		self.image.fill(GREEN)
-		self.rect = self.image.get_rect()
-		self.x = x
-		self.y = y
-		self.rect.x = x * TILESIZE
-		self.rect.y = y * TILESIZE
-
-class AI(pg.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.all_sprites, game.entities
-		pg.sprite.Sprite.__init__(self, self.groups)
-		self.game = game
+		self.level = level
 		random.seed(datetime.now())
+		self.zoom = zoom
+		self.speech = game.json['npcs'][4]
 
 		# Load player spritesheet
 		ss = spritesheet.spritesheet("img/squirrel.png")
@@ -198,7 +199,6 @@ class AI(pg.sprite.Sprite):
 		self.img_up.append(image)
 
 		self.image = self.img_down[0]
-
 		self.vel = vec(1, 1)
 		self.pos = vec(x, y)
 		self.rect = self.image.get_rect()
@@ -219,8 +219,8 @@ class AI(pg.sprite.Sprite):
 	def move(self):
 		threshold = random.randrange(FPS,20*FPS)
 		if self.step >= threshold:
-			self.vel.x = (400*random.random()) - 200
-			self.vel.y = (400*random.random()) - 200
+			self.vel.x = ((2*PLAYER_SPEED)*random.random()) - 200
+			self.vel.y = ((2*PLAYER_SPEED)*random.random()) - 200
 			self.step = 0
 			threshold = random.randrange(FPS,20*FPS)
 		self.step += 1
@@ -255,7 +255,68 @@ class AI(pg.sprite.Sprite):
 		self.rect.center = self.pos
 		self.pos += self.vel * self.game.dt
 		self.hit_rect.centerx = self.pos.x
-		collide_with_walls(self, self.game.walls, 'x')
+		collide_with_walls(self, self.level.walls, 'x')
 		self.hit_rect.centery = self.pos.y
-		collide_with_walls(self, self.game.walls, 'y')
+		collide_with_walls(self, self.level.walls, 'y')
 		self.rect.center = self.hit_rect.center
+
+class NPC(pg.sprite.Sprite):
+	def __init__(self, level, data, x, y, dir='s'):
+		self.groups = level.npcs, level.walls, level.all_sprites
+		pg.sprite.Sprite.__init__(self, self.groups)
+		self.pos = vec(x, y)
+		self.rand = data['rand']
+		self.dialogue = data['dialogue']
+		self.name = data['name']
+		img_file = data['file']
+		self.level = level
+		self.zoom = 1
+		self.game = level.game
+		if img_file:
+			ss = spritesheet.spritesheet(img_file)
+			self.img_down = ss.image_at((42, 0, 35, 40), colorkey = BLACK)
+			self.img_right = ss.image_at((42, 41, 35, 40), colorkey = BLACK)
+			self.img_up = ss.image_at((42, 81, 35, 40), colorkey = BLACK)
+			self.img_left = ss.image_at((42, 121, 35, 40), colorkey = BLACK)
+		else:
+			self.img_up = pg.Surface((32, 48))
+			self.img_left = pg.Surface((32, 48))
+			self.img_right = pg.Surface((32, 48))
+			self.img_down = pg.Surface((32, 48))
+			self.img_up.fill(YELLOW)
+			self.img_left.fill(TEAL)
+			self.img_right.fill(RED)
+			self.img_down.fill(GREEN)
+		if dir is 'n' or 'N':
+			self.image = self.img_down
+		elif dir is 's' or 'S':
+			self.image = self.img_up
+		elif dir is 'w' or 'W':
+			self.image = self.img_left
+		elif dir is 'e' or 'E':
+			self.image = self.img_right
+		self.rect = self.image.get_rect()
+		self.rect.x = x
+		self.rect.y = y
+
+
+	def events(self):
+		player = self.level.player
+		print self.pos.distance_to(player.pos)
+		if self.pos.distance_to(player.pos) < 80:
+			if player.dir.x == -1 and self.pos.x < player.pos.x:
+				self.image = self.img_right
+				self.game.director.scene_stack.append(self.game.director.scene)
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+			elif player.dir.x == 1 and self.pos.x > player.pos.x:
+				self.image = self.img_left
+				self.game.director.scene_stack.append(self.game.director.scene)
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+			elif player.dir.y == -1 and self.pos.y < player.pos.y:
+				self.image = self.img_down
+				self.game.director.scene_stack.append(self.game.director.scene)
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+			elif player.dir.y == 1 and self.pos.y > player.pos.y:
+				self.image = self.img_up
+				self.game.director.scene_stack.append(self.game.director.scene)
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))

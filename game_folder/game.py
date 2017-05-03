@@ -5,89 +5,48 @@ import sys
 from os import path
 import scene
 from settings import *
-from sprites import *
-from tilemap import *
-import random
 import menu
-from pytmx.util_pygame import load_pygame
+import level
+from dialogue import game_json
 
 class Game(scene.Scene):
+	'''
+	Scene class for the actual gameplay. Essentially, it is a director class for
+	the individual levels (rooms) that can be entered/left when moving around the map.
+	'''
 	def __init__(self, director):
 		scene.Scene.__init__(self, director)
 		self.screen = self.director.screen
-		self.background = pg.Surface((WIDTH, HEIGHT))
+		self.background = pg.Surface((WIDTH, HEIGHT)) # Creates a surface to draw everything on
 		self.clock = self.director.clock
 		self.dt = self.director.dt
+		self.json = game_json
 		self.load_data()
-		self.new()
 
 	def load_data(self):
+		''' Add variables for the important folders '''
 		self.game_folder = path.dirname(__file__)
 		self.img_folder = path.join(self.game_folder, 'img')
 		self.map_folder = path.join(self.game_folder, 'map')
-		self.map = TiledMap(path.join(self.map_folder, 'top_world.tmx'))
-		self.map_img = self.map.make_map()
-		self.overlay_img = self.map.make_overlay()
-		image_size = self.map_img.get_size()
-		self.map_img = pg.transform.scale(self.map_img, (2*image_size[0], 2*image_size[1]))
-		self.overlay_img = pg.transform.scale(self.overlay_img, (2*image_size[0], 2*image_size[1]))
-		self.map_rect = self.map_img.get_rect()
 
-	def new(self):
-		self.all_sprites = pg.sprite.Group()
-		self.walls = pg.sprite.Group()
-		self.entities = pg.sprite.Group()
-		for tile_object in self.map.tmxdata.objects:
-			if tile_object.name == 'wall':
-				Obstacle(self, 2*tile_object.x, 2*tile_object.y,
-							2*tile_object.width, 2*tile_object.height)
-			if tile_object.name == 'player':
-				self.player = Player(self, 2*tile_object.x, 2*tile_object.y);
-		for x in range(0, random.randrange(5, 10)):
-			x_pos = (2 * self.map.width) * random.random()
-			y_pos = (2 * self.map.height) * random.random()
-			self.ai = AI(self, x_pos, y_pos)
-		self.camera = Camera(2*self.map.width, 2*self.map.height)
-		self.draw_debug = False
+		self.level = level.TopLevel(self, 0) # Initial spawn when starting the game
+		self.level_stack = [self.level] # Create stack to keep track of level
+		self.level.load() # Load the level
 
 	def update(self):
-		self.all_sprites.update()
-		self.camera.update(self.player)
-		self.update_map()
+		self.level.update() # Call update() function for current level
 
-	def update_map(self):
-		if self.player.pos[0] > 1459 and self.player.pos[0] < 1490 and self.player.pos[1] == 1363 and self.player.dir.y == -1:
-			self.map = TiledMap(path.join(self.map_folder, 'debart.tmx'))
-	 		self.map_img = self.map.make_map()
-	 		self.overlay_img = self.map.make_overlay()
-	 		image_size = self.map_img.get_size()
-	 		self.map_img = pg.transform.scale(self.map_img, (2*image_size[0], 2*image_size[1]))
-	 		self.overlay_img = pg.transform.scale(self.overlay_img, (2*image_size[0], 2*image_size[1]))
-	 		self.map_rect = self.map_img.get_rect()
+	def change_level(self, level):
+		''' Transition between levels '''
+		self.screen.fill(BLACK)
+		self.level = level
 
 	def render(self):
-		pg.display.set_caption(TITLE + "\t\tFPS: " + "{:.2f}".format(self.clock.get_fps()))
-		self.background.blit(self.map_img, self.camera.apply_rect(self.map_rect))
-		if self.draw_debug:
-			for wall in self.walls:
-				pg.draw.rect(self.background, CYAN, self.camera.apply_rect(wall.rect), 1)
-		for sprite in self.all_sprites:
-			self.background.blit(sprite.image, self.camera.apply(sprite))
-			if self.draw_debug:
-				pg.draw.rect(self.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
-		self.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))
-		pg.transform.scale(self.background, (SCREEN_SIZE[0], SCREEN_SIZE[1]), self.screen)
+		''' Draw current frame of game to screen '''
+		pg.display.set_caption(TITLE + "\t\tFPS: " + "{:.2f}".format(self.clock.get_fps())) # Print title and FPS as caption
+		self.level.render() # Call render for current level
+		pg.transform.scale(self.background, (SCREEN_SIZE[0], SCREEN_SIZE[1]), self.screen) # Scale background surface to current screen size, allows you to run window in different resolutions
 
 	def events(self):
-		for event in pg.event.get():
-			if event.type == pg.KEYDOWN:
-				if event.key == pg.K_ESCAPE:
-					self.director.change_scene(menu.StartMenu(self.director))
-				if event.key == pg.K_h:
-					self.draw_debug = not self.draw_debug
-
-	def show_start_screen(self):
-        	pass
-
-	def show_go_screen(self):
-        	pass
+		''' Handle events '''
+		self.level.events() # Call events function for current level

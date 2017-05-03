@@ -1,6 +1,7 @@
 import pygame as pg
 vec = pg.math.Vector2
 
+# Declare what some colors are, useful later in other functions
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 DARKGREY = (40, 40, 40)
@@ -20,14 +21,15 @@ BROWN = (160, 82, 45)
 # game settings
 WIDTH = 1024 # 32 * 16
 HEIGHT = 768 # 24 * 16
-SCREEN_SIZE = [1280, 720]
-FPS = 30
+SCREEN_SIZE = [1280, 720] #1920x1080 1280x720
+FPS = 60
 TITLE = "ND Adventure"
 BGCOLOR = DARKGREY
 
+# What to display on the start menu
 MENU_ITEMS = ('Start', 'Settings', 'Highscore', 'Quit')
 
-
+# Tile settings
 TILESIZE = 16
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
