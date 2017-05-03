@@ -107,67 +107,62 @@ class comput(object):
 			self.counter = self.counter + 1
 screen = pygame.display.set_mode((SCREEN_SIZE[0], SCREEN_SIZE[1]))
 pygame.display.flip()
-class SpideyGame(scene.Scene):
-	def __init__(self, director):
-		scene.Scene.__init__(self, director)
-		enCounter = 0
-		swCounter = 1
-		enList = []
-		spidey1 = spidey()
-		swList = []
-		compList = [comput(SCREEN_SIZE[0]/11), comput(SCREEN_SIZE[0]/3), comput(2*SCREEN_SIZE[0]/3), comput(10*SCREEN_SIZE[0]/11)]
-	def events(self):
-		event = pygame.event.poll()
-		if event.type == pygame.QUIT:
-			self.game.director.change_scene(self.game.director.scene_stack.pop()) #return to menu
-		if pygame.key.get_pressed() [K_LEFT] != 0:
-			spidey1.angle = spidey1.angle + 0.05
-			if spidey1.angle > 3.2:
-				spidey1.angle = 3.2
-		if pygame.key.get_pressed() [K_RIGHT] != 0:
-			spidey1.angle = spidey1.angle - 0.05
-			if spidey1.angle < -0.06:
-				spidey1.angle = -0.06
-		if pygame.key.get_pressed() [K_UP] != 0 and swCounter > 40:
-			swList.append(spidweb(spidey1.angle, SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8 - 0.035 * sw))
-			swCounter = 0
-	def update(self):
-		if (enCounter % 100 == 0):
-			enList.append(enemy(random.randint(10, SCREEN_SIZE[0]-10), 1))
-		for foe in enList:
-			foe.adv()
+over = 0
+enCounter = 0
+swCounter = 1
+enList = [enemy(120, 1)]
+spidey1 = spidey()
+swList = []
+compList = [comput(SCREEN_SIZE[0]/11), comput(SCREEN_SIZE[0]/3), comput(2*SCREEN_SIZE[0]/3), comput(10*SCREEN_SIZE[0]/11)]
+while over == 0:
+	if pygame.key.get_pressed() [K_LEFT] != 0:
+		spidey1.angle = spidey1.angle + 0.05
+		if spidey1.angle > 3.2:
+			spidey1.angle = 3.2
+	if pygame.key.get_pressed() [K_RIGHT] != 0:
+		spidey1.angle = spidey1.angle - 0.05
+		if spidey1.angle < -0.06:
+			spidey1.angle = -0.06
+	if pygame.key.get_pressed() [K_UP] != 0 and swCounter > 40:
+		swList.append(spidweb(spidey1.angle, SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8 - 0.035 * sw))
+		swCounter = 0
+	event = pygame.event.poll()
+	if event.type == pygame.QUIT:
+		over = 3
+	if (enCounter % 100 == 0):
+		enList.append(enemy(random.randint(10, SCREEN_SIZE[0]-10), 1))
+	for foe in enList:
+		foe.adv()
+	for webs in swList:
+		webs.adv()
+	for comps in compList:
+		comps.adv()
+	compList = [ comps for comps in compList if comps.counter < 30 ]
+	for foe in enList:
 		for webs in swList:
-			webs.adv()
+			if abs(foe.pos[0] - webs.pos[0]) < webs.wid/5 + foe.wid/2 and abs(foe.pos[1] - webs.pos[1]) < webs.hei/5 + foe.hei/2:
+				webs.exists = 0
+				foe.exists = 0
+	for foe in enList:
+		if foe.pos[1] + foe.hei/2 > spidey1.pos[1] - 0.03*sw and abs(foe.pos[0]-spidey1.pos[0]) < foe.wid/2 + 0.05*sw:
+			over = 2
 		for comps in compList:
-			comps.adv()
-		compList = [ comps for comps in compList if comps.counter < 30 ]
-		for foe in enList:
-			for webs in swList:
-				if abs(foe.pos[0] - webs.pos[0]) < webs.wid/5 + foe.wid/2 and abs(foe.pos[1] - webs.pos[1]) < webs.hei/5 + foe.hei/2:
-					webs.exists = 0
-					foe.exists = 0
-		for foe in enList:
-			if foe.pos[1] + foe.hei/2 > spidey1.pos[1] - 0.03*sw and abs(foe.pos[0]-spidey1.pos[0]) < foe.wid/2 + 0.05*sw:
-				self.game.director.change_scene(self.game.director.scene_stack.pop()) #return to menu
-			for comps in compList:
-				if foe.pos[1]+foe.hei/2 > comps.pos[1]-comps.tarhei/2 and abs(foe.pos[0] - comps.pos[0]) < foe.wid/2 + comps.tarwid/2:
-					foe.exists = 0
-					comps.status = 1
-		if len(compList) == 0:
-			self.game.director.change_scene(self.game.director.scene_stack.pop()) #return to menu
-		enList = [ foe for foe in enList if foe.pos[1] < 30+(3*SCREEN_SIZE[1]/4) and foe.exists ]
-		swList = [ webs for webs in swList if webs.age < 1102*wr and webs.exists ]
-		enCounter = enCounter + 1
-		swCounter = swCounter + 1
-	def render(self):
-		screen.fill((53, 97, 168))
-		pygame.draw.rect(screen, (113, 112, 119), (0, SCREEN_SIZE[1]*0.8, SCREEN_SIZE[0], SCREEN_SIZE[1]*0.2), 0)
-		for comps in compList:
-			comps.draw(screen)
-		spidey1.draw(screen)
-		for foe in enList:
-			foe.draw(screen)
-		for webs in swList:
-			webs.draw(screen)
-		pygame.display.flip()
-	
+			if foe.pos[1]+foe.hei/2 > comps.pos[1]-comps.tarhei/2 and abs(foe.pos[0] - comps.pos[0]) < foe.wid/2 + comps.tarwid/2:
+				foe.exists = 0
+				comps.status = 1
+	if len(compList) == 0:
+		over = 2
+	enList = [ foe for foe in enList if foe.pos[1] < 30+(3*SCREEN_SIZE[1]/4) and foe.exists ]
+	swList = [ webs for webs in swList if webs.age < 1102*wr and webs.exists ]
+	screen.fill((53, 97, 168))
+	pygame.draw.rect(screen, (113, 112, 119), (0, SCREEN_SIZE[1]*0.8, SCREEN_SIZE[0], SCREEN_SIZE[1]*0.2), 0)
+	for comps in compList:
+		comps.draw(screen)
+	spidey1.draw(screen)
+	for foe in enList:
+		foe.draw(screen)
+	for webs in swList:
+		webs.draw(screen)
+	pygame.display.flip()
+	enCounter = enCounter + 1
+	swCounter = swCounter + 1
