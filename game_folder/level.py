@@ -213,6 +213,8 @@ class ClassroomLevel(Level):
 				self.player = sprites.Player(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y, 1)
 			if tile_object.name == 'NPC':
 				sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
+            if tile_object.name == 'file' and self.room is 141:
+                
 		self.camera = tilemap.Camera(self.scale*self.map.width, self.scale*self.map.height)
 		self.draw_debug = False
 
