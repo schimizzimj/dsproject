@@ -34,7 +34,7 @@ game_json = {
 		{
 			'name': 'Professsor Emrich',
 			'rand': False,
-			'file': '',
+			'file': './img/scott.png',
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
@@ -46,11 +46,12 @@ game_json = {
 		{
 			'name': 'Professsor Kumar',
 			'rand': False,
-			'file': '',
+			'file': './img/shreya.png',
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
-				'Are you ready for adventure?'
+				'Thanks for coming down to the front.'
+                'Here\'s a million points'
 				]
 			]
 		},
