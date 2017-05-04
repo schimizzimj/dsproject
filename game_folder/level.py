@@ -209,10 +209,10 @@ class ClassroomLevel(Level):
 			if tile_object.name == 'wall':
 				sprites.Obstacle(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y,
 					self.scale*tile_object.width, self.scale*tile_object.height)
-			if tile_object.name == 'player' and int(tile_object.entrance) == self.entrance:
-				self.player = sprites.Player(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y, 1)
 			if tile_object.name == 'NPC':
 				sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
+			if tile_object.name == 'player' and int(tile_object.entrance) == self.entrance:
+				self.player = sprites.Player(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y, 1)
 		self.camera = tilemap.Camera(self.scale*self.map.width, self.scale*self.map.height)
 		self.draw_debug = False
 
@@ -226,6 +226,7 @@ class ClassroomLevel(Level):
 				if event.key == pg.K_SPACE:
 					for npc in self.npcs:
 						npc.events()
+
 
 		if self.player.pos.x >= 402 and self.player.pos.x <= 494:
 			if self.player.pos.y == 1306 and self.player.dir.y == 1:

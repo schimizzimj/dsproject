@@ -14,9 +14,23 @@ game_json = {
 				[
 					'~~WAKE ME UP! Wake me up inside.~~',
 					'Oh hello..',
-					'Welcome to Systems Programming!'
+					'Welcome to Systems Programming!',
+					'Could you do me a favor and unbork these computers?'
+				],
+				[
+					'That did not go to well.',
+					"I'll give you an extension then."
+				],
+				[
+					'You did it! Congrats!',
+					'~~City of stars, are you shining just for me?~~',
+					'~~City of stars...'
 				]
-			]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
 		},
 
 		{
@@ -28,19 +42,30 @@ game_json = {
 				'Welcome to Logic Design!',
 				'Are you ready for adventure?'
 				]
-			]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
 		},
 
 		{
 			'name': 'Professsor Emrich',
 			'rand': False,
-			'file': '',
+			'file': ['img/emrich/emrich1.png',
+					'img/emrich/emrich2.png',
+					'img/emrich/emrich3.png',
+					'img/emrich/emrich4.png'],
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
 				'Are you ready for adventure?'
 				]
-			]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
 		},
 
 		{
@@ -52,7 +77,11 @@ game_json = {
 				'Welcome to Data Structures!',
 				'Are you ready for adventure?'
 				]
-			]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
 		},
 
 		{

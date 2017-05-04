@@ -48,15 +48,15 @@ class SettingsMenu(scene.Scene):
 			self.gui.event(event)
 
 	def update(self):
-		if self.dd.value is not None:
+		if self.dropdown.value is not None:
 			# if menu select is used, change screen size accordingly
-			if self.dd.value == 1920:
+			if self.dropdown.value == 1920:
 				settings.SCREEN_SIZE[0] = 1920
 				settings.SCREEN_SIZE[1] = 1080
-			elif self.dd.value == 1280:
+			elif self.dropdown.value == 1280:
 				settings.SCREEN_SIZE[0] = 1280
 				settings.SCREEN_SIZE[1] = 720
-			elif self.dd.value == 1024:
+			elif self.dropdown.value == 1024:
 				settings.SCREEN_SIZE[0] = 1024
 				settings.SCREEN_SIZE[1] = 576
 			self.screen = pygame.display.set_mode((settings.SCREEN_SIZE[0], settings.SCREEN_SIZE[1]))

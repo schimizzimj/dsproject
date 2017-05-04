@@ -5,6 +5,7 @@ import pygame
 from settings import *
 from pygame.locals import *
 import spritesheet
+import scene
 
 sw = SCREEN_SIZE[0]
 sh = SCREEN_SIZE[1]
@@ -29,7 +30,7 @@ class spidey(object):
 		self.status = 4
 		self.exists = 1
 	def draw(self, screen):
-#		pygame.draw.rect(screen, (175, 175, 255), (self.pos[0] - 0.03*sw, self.pos[1] - 0.05*sw, 0.06*sw, 0.1*sw), 0)
+#		pygame.draw.rect(self.screen, (175, 175, 255), (self.pos[0] - 0.03*sw, self.pos[1] - 0.05*sw, 0.06*sw, 0.1*sw), 0)
 		if self.angle < 3.141592/6:
 			self.status = 1
 			screen.blit(self.img1, (self.pos[0] - 0.05*sw, self.pos[1] - 0.06*sw))
@@ -76,7 +77,7 @@ class enemy(object):
 		self.exists = 1
 	def draw(self, screen):
 		screen.blit(self.img1, (int(self.pos[0]) - self.img1.get_width()/2, int(self.pos[1]) - self.img1.get_height()/2))
-		#pygame.draw.rect(screen, (255, 0, 0), (self.pos[0]-self.wid/2, self.pos[1]-self.hei/2, self.wid, self.hei), 0)
+		#pygame.draw.rect(self.screen, (255, 0, 0), (self.pos[0]-self.wid/2, self.pos[1]-self.hei/2, self.wid, self.hei), 0)
 	def adv(self):
 		self.pos[1] = self.pos[1] + self.speed
 class comput(object):
@@ -98,76 +99,76 @@ class comput(object):
 	def draw(self, screen):
 		if self.status == 0:
 			screen.blit(self.img1, (self.pos[0] - self.imwid/2.65, self.pos[1] - self.imhei/3.3))
-#			pygame.draw.rect(screen, (0, 255, 0), (self.pos[0] - self.tarwid/2, self.pos[1] - self.tarhei/2, self.tarwid, self.tarhei), 0)
+#			pygame.draw.rect(self.screen, (0, 255, 0), (self.pos[0] - self.tarwid/2, self.pos[1] - self.tarhei/2, self.tarwid, self.tarhei), 0)
 		if self.status == 1:
 			screen.blit(self.img2, (self.pos[0] - self.imwid2/2, self.pos[1] - self.imhei2/2))
-#			pygame.draw.rect(screen, (255, 255, 0), (self.pos[0] - self.tarwid/2, self.pos[1] - self.tarhei/2, self.tarwid, self.tarhei), 0)
+#			pygame.draw.rect(self.screen, (255, 255, 0), (self.pos[0] - self.tarwid/2, self.pos[1] - self.tarhei/2, self.tarwid, self.tarhei), 0)
 	def adv(self):
 		if self.status == 1:
 			self.counter = self.counter + 1
-screen = pygame.display.set_mode((SCREEN_SIZE[0], SCREEN_SIZE[1]))
-pygame.display.flip()
+
+
 class SpideyGame(scene.Scene):
-	def __init__(self, director):
+	def __init__(self, director, game):
 		scene.Scene.__init__(self, director)
-		enCounter = 0
-		swCounter = 1
-		enList = []
-		spidey1 = spidey()
-		swList = []
-		compList = [comput(SCREEN_SIZE[0]/11), comput(SCREEN_SIZE[0]/3), comput(2*SCREEN_SIZE[0]/3), comput(10*SCREEN_SIZE[0]/11)]
+		self.game = game
+		self.screen = game.screen
+		self.enCounter = 0
+		self.swCounter = 1
+		self.enList = []
+		self.spidey1 = spidey()
+		self.swList = []
+		self.compList = [comput(SCREEN_SIZE[0]/11), comput(SCREEN_SIZE[0]/3), comput(2*SCREEN_SIZE[0]/3), comput(10*SCREEN_SIZE[0]/11)]
 	def events(self):
 		event = pygame.event.poll()
 		if event.type == pygame.QUIT:
 			self.game.director.change_scene(self.game.director.scene_stack.pop()) #return to menu
 		if pygame.key.get_pressed() [K_LEFT] != 0:
-			spidey1.angle = spidey1.angle + 0.05
-			if spidey1.angle > 3.2:
-				spidey1.angle = 3.2
+			self.spidey1.angle = self.spidey1.angle + 0.05
+			if self.spidey1.angle > 3.2:
+				self.spidey1.angle = 3.2
 		if pygame.key.get_pressed() [K_RIGHT] != 0:
-			spidey1.angle = spidey1.angle - 0.05
-			if spidey1.angle < -0.06:
-				spidey1.angle = -0.06
-		if pygame.key.get_pressed() [K_UP] != 0 and swCounter > 40:
-			swList.append(spidweb(spidey1.angle, SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8 - 0.035 * sw))
-			swCounter = 0
+			self.spidey1.angle = self.spidey1.angle - 0.05
+			if self.spidey1.angle < -0.06:
+				self.spidey1.angle = -0.06
+		if pygame.key.get_pressed() [K_UP] != 0 and self.swCounter > 40:
+			self.swList.append(spidweb(self.spidey1.angle, SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8 - 0.035 * sw))
+			self.swCounter = 0
 	def update(self):
-		if (enCounter % 100 == 0):
-			enList.append(enemy(random.randint(10, SCREEN_SIZE[0]-10), 1))
-		for foe in enList:
+		if (self.enCounter % 100 == 0):
+			self.enList.append(enemy(random.randint(10, SCREEN_SIZE[0]-10), 1))
+		for foe in self.enList:
 			foe.adv()
-		for webs in swList:
+		for webs in self.swList:
 			webs.adv()
-		for comps in compList:
+		for comps in self.compList:
 			comps.adv()
-		compList = [ comps for comps in compList if comps.counter < 30 ]
-		for foe in enList:
-			for webs in swList:
+		self.compList = [ comps for comps in self.compList if comps.counter < 30 ]
+		for foe in self.enList:
+			for webs in self.swList:
 				if abs(foe.pos[0] - webs.pos[0]) < webs.wid/5 + foe.wid/2 and abs(foe.pos[1] - webs.pos[1]) < webs.hei/5 + foe.hei/2:
 					webs.exists = 0
 					foe.exists = 0
-		for foe in enList:
-			if foe.pos[1] + foe.hei/2 > spidey1.pos[1] - 0.03*sw and abs(foe.pos[0]-spidey1.pos[0]) < foe.wid/2 + 0.05*sw:
+		for foe in self.enList:
+			if foe.pos[1] + foe.hei/2 > self.spidey1.pos[1] - 0.03*sw and abs(foe.pos[0]-self.spidey1.pos[0]) < foe.wid/2 + 0.05*sw:
 				self.game.director.change_scene(self.game.director.scene_stack.pop()) #return to menu
-			for comps in compList:
+			for comps in self.compList:
 				if foe.pos[1]+foe.hei/2 > comps.pos[1]-comps.tarhei/2 and abs(foe.pos[0] - comps.pos[0]) < foe.wid/2 + comps.tarwid/2:
 					foe.exists = 0
 					comps.status = 1
-		if len(compList) == 0:
+		if len(self.compList) == 0:
 			self.game.director.change_scene(self.game.director.scene_stack.pop()) #return to menu
-		enList = [ foe for foe in enList if foe.pos[1] < 30+(3*SCREEN_SIZE[1]/4) and foe.exists ]
-		swList = [ webs for webs in swList if webs.age < 1102*wr and webs.exists ]
-		enCounter = enCounter + 1
-		swCounter = swCounter + 1
+		self.enList = [ foe for foe in self.enList if foe.pos[1] < 30+(3*SCREEN_SIZE[1]/4) and foe.exists ]
+		self.swList = [ webs for webs in self.swList if webs.age < 1102*wr and webs.exists ]
+		self.enCounter = self.enCounter + 1
+		self.swCounter = self.swCounter + 1
 	def render(self):
-		screen.fill((53, 97, 168))
-		pygame.draw.rect(screen, (113, 112, 119), (0, SCREEN_SIZE[1]*0.8, SCREEN_SIZE[0], SCREEN_SIZE[1]*0.2), 0)
-		for comps in compList:
-			comps.draw(screen)
-		spidey1.draw(screen)
-		for foe in enList:
-			foe.draw(screen)
-		for webs in swList:
-			webs.draw(screen)
-		pygame.display.flip()
-	
+		self.screen.fill((53, 97, 168))
+		pygame.draw.rect(self.screen, (113, 112, 119), (0, SCREEN_SIZE[1]*0.8, SCREEN_SIZE[0], SCREEN_SIZE[1]*0.2), 0)
+		for comps in self.compList:
+			comps.draw(self.screen)
+		self.spidey1.draw(self.screen)
+		for foe in self.enList:
+			foe.draw(self.screen)
+		for webs in self.swList:
+			webs.draw(self.screen)
