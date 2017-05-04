@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+import sys
 import pygame as pg
 import pytmx
 from pytmx.util_pygame import load_pygame
@@ -26,20 +27,35 @@ class TiledMap:
 		self.height = tm.height * tm.tileheight
 		self.tmxdata = tm
 
-	def render(self, surface):
+	def render(self, surface, overlay):
 		ti = self.tmxdata.get_tile_image_by_gid
 		for layer in self.tmxdata.visible_layers:
-			if isinstance(layer, pytmx.TiledTileLayer):
-				for x, y, gid, in layer:
-					tile = ti(gid)
-					if tile:
-						surface.blit(tile,
-							(x * self.tmxdata.tilewidth,
-							  y * self.tmxdata.tileheight))
+			if layer.name == 'overlay' and overlay:
+				if isinstance(layer, pytmx.TiledTileLayer):
+					for x, y, gid, in layer:
+						tile = ti(gid)
+						if tile:
+							surface.blit(tile,
+								(x * self.tmxdata.tilewidth,
+								  y * self.tmxdata.tileheight))
+			elif not overlay:
+				if isinstance(layer, pytmx.TiledTileLayer):
+					for x, y, gid, in layer:
+						tile = ti(gid)
+						if tile:
+							surface.blit(tile,
+								(x * self.tmxdata.tilewidth,
+								  y * self.tmxdata.tileheight))
 
 	def make_map(self):
 		temp_surface = pg.Surface((self.width, self.height))
-		self.render(temp_surface)
+		self.render(temp_surface, False)
+		return temp_surface
+
+	def make_overlay(self):
+		temp_surface = pg.Surface((self.width, self.height), pg.SRCALPHA, 32)
+		temp_surface = temp_surface.convert_alpha()
+		self.render(temp_surface, True)
 		return temp_surface
 
 class Camera:
