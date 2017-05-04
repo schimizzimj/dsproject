@@ -211,13 +211,8 @@ class ClassroomLevel(Level):
 					self.scale*tile_object.width, self.scale*tile_object.height)
 			if tile_object.name == 'NPC':
 				sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
-<<<<<<< HEAD
 			if tile_object.name == 'player' and int(tile_object.entrance) == self.entrance:
 				self.player = sprites.Player(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y, 1)
-=======
-            if tile_object.name == 'file' and self.room is 141:
-                
->>>>>>> edeca9640ee61a577eb7050d60858bf71043f3b2
 		self.camera = tilemap.Camera(self.scale*self.map.width, self.scale*self.map.height)
 		self.draw_debug = False
 

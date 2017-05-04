@@ -2,9 +2,11 @@
 import math
 import random
 import pygame
+import os
 from settings import *
 from pygame.locals import *
 import spritesheet
+import dialogue
 import scene
 
 sw = SCREEN_SIZE[0]
@@ -13,17 +15,17 @@ wr = float(sw)/1920
 hr = float(sh)/1080
 class spidey(object):
 	def __init__(self):
-		self.img1 = pygame.image.load("img/spiderman1.png")
+		self.img1 = pygame.image.load(os.path.join(IMG_FOLDER, "spiderman1.png"))
 		self.img1 = pygame.transform.scale(self.img1, (int(self.img1.get_width()*wr), int(self.img1.get_height()*hr)))
-		self.img2 = pygame.image.load("img/spiderman2.png")
+		self.img2 = pygame.image.load(os.path.join(IMG_FOLDER, "spiderman2.png"))
 		self.img2 = pygame.transform.scale(self.img2, (int(self.img2.get_width()*wr), int(self.img2.get_height()*hr)))
-		self.img3 = pygame.image.load("img/spiderman3.png")
+		self.img3 = pygame.image.load(os.path.join(IMG_FOLDER, "spiderman3.png"))
 		self.img3 = pygame.transform.scale(self.img3, (int(self.img3.get_width()*wr), int(self.img3.get_height()*hr)))
-		self.img4 = pygame.image.load("img/spiderman3left.png")
+		self.img4 = pygame.image.load(os.path.join(IMG_FOLDER, "spiderman3left.png"))
 		self.img4 = pygame.transform.scale(self.img4, (int(self.img4.get_width()*wr), int(self.img4.get_height()*hr)))
-		self.img5 = pygame.image.load("img/spiderman2left.png")
+		self.img5 = pygame.image.load(os.path.join(IMG_FOLDER, "spiderman2left.png"))
 		self.img5 = pygame.transform.scale(self.img5, (int(self.img5.get_width()*wr), int(self.img5.get_height()*hr)))
-		self.img6 = pygame.image.load("img/spiderman1left.png")
+		self.img6 = pygame.image.load(os.path.join(IMG_FOLDER, "spiderman1left.png"))
 		self.img6 = pygame.transform.scale(self.img6, (int(self.img6.get_width()*wr), int(self.img6.get_height()*hr)))
 		self.pos = [SCREEN_SIZE[0]/2, SCREEN_SIZE[1] * 0.8]
 		self.angle = 3.141592 / 2
@@ -56,7 +58,7 @@ class spidweb(object):
 		self.pos = [float(x), float(y)]
 		self.age = 0
 		self.exists = 1
-		self.img1 = pygame.image.load("img/web.png")
+		self.img1 = pygame.image.load(os.path.join(IMG_FOLDER, 'web.png'))
 		self.wid = int(self.img1.get_width()*wr)
 		self.hei = int(self.img1.get_height()*hr)
 		self.img1 = pygame.transform.scale(self.img1, (self.wid, self.hei))
@@ -71,7 +73,7 @@ class enemy(object):
 		self.pos = [float(x), -40*hr]
 		self.wid = 60*wr
 		self.hei = 40*hr
-		self.img1 = pygame.image.load("img/virus.png")
+		self.img1 = pygame.image.load(os.path.join(IMG_FOLDER, "virus.png"))
 		self.img1 = pygame.transform.scale(self.img1, (int(self.img1.get_width()*wr), int(self.img1.get_height()*hr)))
 		self.speed = spd*hr
 		self.exists = 1
@@ -86,11 +88,11 @@ class comput(object):
 		self.status = 0
 		self.counter = 0
 		self.exists = 1
-		self.img1 = pygame.image.load("img/computer.png")
+		self.img1 = pygame.image.load(os.path.join(IMG_FOLDER, "computer.png"))
 		self.imwid = int(self.img1.get_width()*wr)
 		self.imhei = int(self.img1.get_height()*hr)
 		self.img1 = pygame.transform.scale(self.img1, (self.imwid, self.imhei))
-		self.img2 = pygame.image.load("img/explosion.png")
+		self.img2 = pygame.image.load(os.path.join(IMG_FOLDER, "explosion.png"))
 		self.imwid2 = int(self.img1.get_width()*wr)
 		self.imhei2 = int(self.img1.get_height()*hr)
 		self.img2 = pygame.transform.scale(self.img2, (self.imwid2, self.imhei2))
@@ -151,13 +153,14 @@ class SpideyGame(scene.Scene):
 					foe.exists = 0
 		for foe in self.enList:
 			if foe.pos[1] + foe.hei/2 > self.spidey1.pos[1] - 0.03*sw and abs(foe.pos[0]-self.spidey1.pos[0]) < foe.wid/2 + 0.05*sw:
-				self.game.director.change_scene(self.game.director.scene_stack.pop()) #return to menu
+				self.game.director.change_scene(self.game.director.scene_stack.pop())
+
 			for comps in self.compList:
 				if foe.pos[1]+foe.hei/2 > comps.pos[1]-comps.tarhei/2 and abs(foe.pos[0] - comps.pos[0]) < foe.wid/2 + comps.tarwid/2:
 					foe.exists = 0
 					comps.status = 1
 		if len(self.compList) == 0:
-			self.game.director.change_scene(self.game.director.scene_stack.pop()) #return to menu
+			self.game.director.change_scene(self.game.director.scene_stack.pop())
 		self.enList = [ foe for foe in self.enList if foe.pos[1] < 30+(3*SCREEN_SIZE[1]/4) and foe.exists ]
 		self.swList = [ webs for webs in self.swList if webs.age < 1102*wr and webs.exists ]
 		self.enCounter = self.enCounter + 1

@@ -1,4 +1,5 @@
 import pygame as pg
+from os import path
 vec = pg.math.Vector2
 
 # Declare what some colors are, useful later in other functions
@@ -25,6 +26,11 @@ SCREEN_SIZE = [1280, 720] #1920x1080 1280x720
 FPS = 60
 TITLE = "ND Adventure"
 BGCOLOR = DARKGREY
+
+# necessary folders
+GAME_FOLDER = path.dirname(__file__)
+IMG_FOLDER = path.join(GAME_FOLDER, 'img')
+MAP_FOLDER = path.join(GAME_FOLDER, 'map')
 
 # What to display on the start menu
 MENU_ITEMS = ('Start', 'Settings', 'Highscore', 'Quit')

@@ -4,6 +4,7 @@ import pygame as pg
 from settings import *
 from tilemap import collide_hit_rect
 import spritesheet
+import os
 import random
 from datetime import datetime
 import math
@@ -49,7 +50,7 @@ class Player(pg.sprite.Sprite):
 		self.zoom = zoom # used to properly scale the player based on current environment
 
 		# Load player spritesheet
-		ss = spritesheet.spritesheet("img/lep.png")
+		ss = spritesheet.spritesheet(os.path.join(IMG_FOLDER, "lep.png"))
 
 		# These will store the images for the player sprite animations
 		self.img_up = []
@@ -170,7 +171,7 @@ class Squirrels(pg.sprite.Sprite):
 		self.speech = game.json['npcs'][4]
 
 		# Load player spritesheet
-		ss = spritesheet.spritesheet("img/squirrel.png")
+		ss = spritesheet.spritesheet(os.path.join(IMG_FOLDER, "squirrel.png"))
 
 		# These will store the images for the player sprite animations
 		self.img_up = []
@@ -283,10 +284,10 @@ class NPC(pg.sprite.Sprite):
 		self.zoom = 1
 		self.game = level.game
 		if img_files:
-			self.img_down = pg.image.load(img_files[0])
-			self.img_up = pg.image.load(img_files[1])
-			self.img_left = pg.image.load(img_files[2])
-			self.img_right = pg.image.load(img_files[3])
+			self.img_down = pg.image.load(os.path.join(IMG_FOLDER, img_files[0]))
+			self.img_up = pg.image.load(os.path.join(IMG_FOLDER, img_files[1]))
+			self.img_left = pg.image.load(os.path.join(IMG_FOLDER, img_files[2]))
+			self.img_right = pg.image.load(os.path.join(IMG_FOLDER, img_files[3]))
 		else:
 			self.img_up = pg.Surface((32, 48))
 			self.img_left = pg.Surface((32, 48))
@@ -317,20 +318,60 @@ class NPC(pg.sprite.Sprite):
 			if player.dir.x == -1 and self.pos.x < player.pos.x:
 				self.image = self.img_right
 				self.game.director.scene_stack.append(self.game.director.scene)
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.speak()
 			elif player.dir.x == 1 and self.pos.x > player.pos.x:
 				self.image = self.img_left
 				self.game.director.scene_stack.append(self.game.director.scene)
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.speak()
 			elif player.dir.y == -1 and self.pos.y < player.pos.y:
 				self.image = self.img_down
 				self.game.director.scene_stack.append(self.game.director.scene)
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.speak()
 			elif player.dir.y == 1 and self.pos.y > player.pos.y:
 				self.image = self.img_up
 				self.game.director.scene_stack.append(self.game.director.scene)
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
-			#self.game.director.change_scene(systems.SpideyGame(self.game.director, self.game))
+				self.speak()
+				self.start_game(1)
 
 	def speak(self):
-		pass
+		print self.name
+		if self.name == 'Professor Bui':
+			print self.logic['spoken']
+			if not self.logic['spoken']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			elif self.logic['spoken'] and not self.logic['completed']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
+		elif self.name is 'Professor Emrich':
+			if not self.logic['spoken']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			else:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
+		elif self.name is 'Professor Kumar':
+			if not self.logic['spoken']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			else:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
+		elif self.name is 'Professor Brockman':
+			if not self.logic['spoken']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			else:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
+		elif self.name is 'Professor Bualuan':
+			if not self.logic['spoken']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			else:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
+
+	def start_game(self, game):
+		if game is 1:
+			self.game.director.change_scene(systems.SpideyGame(self.game.director, self.game))

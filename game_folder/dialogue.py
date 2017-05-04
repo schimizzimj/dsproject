@@ -7,7 +7,7 @@ the file name of the spritesheet (although the NPC class must be updated).
 game_json = {
 	'npcs': [
 		{
-			'name': 'Professsor Bui',
+			'name': 'Professor Bui',
 			'rand': False,
 			'file': '',
 			'dialogue': [
@@ -34,13 +34,17 @@ game_json = {
 		},
 
 		{
-			'name': 'Professsor Brockman',
+			'name': 'Professor Brockman',
 			'rand': False,
 			'file': '',
 			'dialogue': [
 				[
 				'Welcome to Logic Design!',
 				'Are you ready for adventure?'
+				],
+				[
+				"I don't have a game.",
+				"Why don't I have a game?!"
 				]
 			],
 			'logic': {
@@ -50,20 +54,21 @@ game_json = {
 		},
 
 		{
-			'name': 'Professsor Emrich',
+			'name': 'Professor Emrich',
 			'rand': False,
-<<<<<<< HEAD
-			'file': ['img/emrich/emrich1.png',
-					'img/emrich/emrich2.png',
-					'img/emrich/emrich3.png',
-					'img/emrich/emrich4.png'],
-=======
-			'file': './img/scott.png',
->>>>>>> edeca9640ee61a577eb7050d60858bf71043f3b2
+			'file': ['emrich/emrich1.png',
+					'emrich/emrich2.png',
+					'emrich/emrich3.png',
+					'emrich/emrich4.png'],
+			#'file': './img/scott.png',
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
 				'Are you ready for adventure?'
+				],
+				[
+				"I don't have a game.",
+				"Why don't I have a game?!"
 				]
 			],
 			'logic': {
@@ -73,14 +78,18 @@ game_json = {
 		},
 
 		{
-			'name': 'Professsor Kumar',
+			'name': 'Professor Kumar',
 			'rand': False,
-			'file': './img/shreya.png',
+			'file': 'shreya.png',
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
 				'Thanks for coming down to the front.'
-                'Here\'s a million points'
+                "Here's a million points!"
+				],
+				[
+				"I think you've already completed the task.",
+				"Here's a million more points though!"
 				]
 			],
 			'logic': {

@@ -25,9 +25,9 @@ class Game(scene.Scene):
 
 	def load_data(self):
 		''' Add variables for the important folders '''
-		self.game_folder = path.dirname(__file__)
-		self.img_folder = path.join(self.game_folder, 'img')
-		self.map_folder = path.join(self.game_folder, 'map')
+		self.game_folder = GAME_FOLDER
+		self.img_folder = IMG_FOLDER
+		self.map_folder = MAP_FOLDER
 
 		self.level = level.TopLevel(self, 0) # Initial spawn when starting the game
 		self.level_stack = [self.level] # Create stack to keep track of level

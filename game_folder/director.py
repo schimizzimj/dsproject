@@ -3,6 +3,7 @@
 # Import modules
 import pygame as pg
 import sys
+import os
 from settings import *
 
 class Director(object):
@@ -11,7 +12,7 @@ class Director(object):
 		It runs the main game loop and switches between scenes as necessary.
 	"""
 	def __init__(self):
-		gameIcon = pg.image.load('img/icon.png')
+		gameIcon = pg.image.load(os.path.join(IMG_FOLDER, 'icon.png'))
 		pg.display.set_icon(gameIcon) # change icon in top left to ND
 		self.screen = pg.display.set_mode((SCREEN_SIZE[0], SCREEN_SIZE[1]), 0, 32)
 		self.scene = None
@@ -25,7 +26,7 @@ class Director(object):
 			self.dt = self.clock.tick(FPS) / 1000.0
 			if pg.event.get(pg.QUIT):
 				self.quit()
-
+			print self.scene
 			self.scene.events()
 			self.scene.update()
 			self.scene.render()
