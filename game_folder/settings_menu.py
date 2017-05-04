@@ -15,47 +15,55 @@ class SettingsMenu(scene.Scene):
 	def __init__(self, director):
 		scene.Scene.__init__(self, director)
 		font = pygame.font.SysFont("default", 14)
-		fontBig = pygame.font.SysFont("default", 36)
-		fontSub = pygame.font.SysFont("default", 12)
+		font_big = pygame.font.SysFont("default", 36)
 		self.screen = self.director.screen
 
 	    # create GUI object
 		self.gui = pgui.App()
 
-	    # layout using document
-		lo = pgui.Container(width= settings.SCREEN_SIZE[0] / 2)
+	    # create wrapper
+		wrapper = pgui.Container(width = settings.SCREEN_SIZE[0] / 2)
 
-	    # create page label
-	    #lo.block(align=-1) #lo.br(8) #lo.tr()
-		title = pgui.Label("Game Settings", font=fontBig)
-		lo.add(title,29,13)
+	    # create page title
+		title = pgui.Label("Game Settings", font=font_big)
+		wrapper.add(title,29,13)
 
-		ddl = pgui.Label("Screen Resolution")
-		lo.add(ddl,40,195)
-		dd_width = 200
-		self.dd = pgui.Select(size=32,width=dd_width,height=16)
-		self.dd.add("1920 x 1080", (1920, 1080))
-		self.dd.add("1280 x 720", (1280, 720))
-		lo.add(self.dd,((settings.SCREEN_SIZE[0] / 2) - dd_width),195) #, colspan=3)
+		# add select for screen resolutions
+		dropdown_label = pgui.Label("Screen Resolution")
+		wrapper.add(dropdown_label,40,195)
+		dropdown_width = 200
+		self.dropdown = pgui.Select(size = 32, width = dropdown_width, height = 16)
+		self.dropdown.add("1920 x 1080", 1920)
+		self.dropdown.add("1280 x 720", 1280)
+		self.dropdown.add("1024 x 576", 1024)
+		wrapper.add(self.dropdown, ((settings.SCREEN_SIZE[0] / 2) - dropdown_width), 195) #, colspan=3)
 
-		self.gui.init(lo)
+		self.gui.init(wrapper)
 
 	def events(self):
-		#Handle Input Events
+		''' Handle events '''
 		for event in pygame.event.get():
-			if event.type == QUIT:
-				return
-			elif event.type == KEYDOWN and event.key == K_ESCAPE:
-				self.director.change_scene(menu.StartMenu(self.director))
+			if event.type == KEYDOWN and event.key == K_ESCAPE:
+				self.director.change_scene(self.director.scene_stack.pop())
 			self.gui.event(event)
 
 	def update(self):
-		if self.dd.value is not None:
-			settings.SCREEN_SIZE[1] = 1080
-			settings.SCREEN_SIZE[0] = 1920
+		if self.dropdown.value is not None:
+			# if menu select is used, change screen size accordingly
+			if self.dropdown.value == 1920:
+				settings.SCREEN_SIZE[0] = 1920
+				settings.SCREEN_SIZE[1] = 1080
+			elif self.dropdown.value == 1280:
+				settings.SCREEN_SIZE[0] = 1280
+				settings.SCREEN_SIZE[1] = 720
+			elif self.dropdown.value == 1024:
+				settings.SCREEN_SIZE[0] = 1024
+				settings.SCREEN_SIZE[1] = 576
 			self.screen = pygame.display.set_mode((settings.SCREEN_SIZE[0], settings.SCREEN_SIZE[1]))
 
+
+
 	def render(self):
-		# clear background, and draw clock-spinner
+		''' recolor screen and draw gui '''
 		self.screen.fill(settings.ND_GOLD)
 		self.gui.paint(self.screen)
