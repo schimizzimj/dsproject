@@ -7,6 +7,7 @@ from settings import *
 from pygame.locals import *
 import spritesheet
 import dialogue
+import textbox
 import scene
 
 sw = SCREEN_SIZE[0]
@@ -51,7 +52,7 @@ class spidey(object):
 		if self.angle > 5*3.141592/6:
 			self.status = 6
 			screen.blit(self.img6, (self.pos[0] - 0.06*sw, self.pos[1] - 0.06*sw))
-		pygame.draw.line(screen, (255, 255, 255), (SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8-0.035*sw), (SCREEN_SIZE[0]/2 + 50*math.cos(self.angle), SCREEN_SIZE[1]*0.8 - 50*math.sin(self.angle)-0.035*sw))
+		#pygame.draw.line(screen, (255, 255, 255), (SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8-0.035*sw), (SCREEN_SIZE[0]/2 + 50*math.cos(self.angle), SCREEN_SIZE[1]*0.8 - 50*math.sin(self.angle)-0.035*sw))
 class spidweb(object):
 	def __init__(self, ang, x, y):
 		self.vel = [3*math.cos(ang)*hr, -3*math.sin(ang)*hr]
@@ -111,15 +112,18 @@ class comput(object):
 
 
 class SpideyGame(scene.Scene):
-	def __init__(self, director, game):
+	def __init__(self, director, game, post_win):
 		scene.Scene.__init__(self, director)
 		self.game = game
 		self.screen = game.screen
+		self.font = pg.font.Font(None, 35) # create font object
 		self.enCounter = 0
 		self.swCounter = 1
 		self.enList = []
+		self.victory = 360
 		self.spidey1 = spidey()
 		self.swList = []
+		self.post_win = post_win
 		self.compList = [comput(SCREEN_SIZE[0]/11), comput(SCREEN_SIZE[0]/3), comput(2*SCREEN_SIZE[0]/3), comput(10*SCREEN_SIZE[0]/11)]
 	def events(self):
 		event = pygame.event.poll()
@@ -137,6 +141,7 @@ class SpideyGame(scene.Scene):
 			self.swList.append(spidweb(self.spidey1.angle, SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8 - 0.035 * sw))
 			self.swCounter = 0
 	def update(self):
+		self.victory -= 1
 		if (self.enCounter % 100 == 0):
 			self.enList.append(enemy(random.randint(10, SCREEN_SIZE[0]-10), 1))
 		for foe in self.enList:
@@ -165,6 +170,12 @@ class SpideyGame(scene.Scene):
 		self.swList = [ webs for webs in self.swList if webs.age < 1102*wr and webs.exists ]
 		self.enCounter = self.enCounter + 1
 		self.swCounter = self.swCounter + 1
+		if self.victory <= 0:
+			self.game.json['npcs'][0]['logic']['completed'] = True
+			self.game.director.change_scene(self.game.director.scene_stack[-1])
+			self.game.director.scene.render()
+			self.game.director.change_scene(self.post_win)
+
 	def render(self):
 		self.screen.fill((53, 97, 168))
 		pygame.draw.rect(self.screen, (113, 112, 119), (0, SCREEN_SIZE[1]*0.8, SCREEN_SIZE[0], SCREEN_SIZE[1]*0.2), 0)
@@ -175,3 +186,6 @@ class SpideyGame(scene.Scene):
 			foe.draw(self.screen)
 		for webs in self.swList:
 			webs.draw(self.screen)
+		timer_string = "Time remaining: " + str(self.victory)
+		time_left = self.font.render(str(timer_string), 1, WHITE)
+		self.screen.blit(time_left, (SCREEN_SIZE[0] - 300, 10))

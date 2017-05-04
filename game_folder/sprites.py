@@ -46,6 +46,7 @@ class Player(pg.sprite.Sprite):
 		self.groups = level.all_sprites
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
+		self.name = 'Player'
 		self.level = level
 		self.zoom = zoom # used to properly scale the player based on current environment
 
@@ -165,6 +166,7 @@ class Squirrels(pg.sprite.Sprite):
 		self.groups = level.all_sprites, level.squirrels
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
+		self.name = 'Squirrel'
 		self.level = level
 		random.seed(datetime.now())
 		self.zoom = zoom
@@ -284,10 +286,10 @@ class NPC(pg.sprite.Sprite):
 		self.zoom = 1
 		self.game = level.game
 		if img_files:
-			self.img_down = pg.image.load(os.path.join(IMG_FOLDER, img_files[0]))
-			self.img_up = pg.image.load(os.path.join(IMG_FOLDER, img_files[1]))
-			self.img_left = pg.image.load(os.path.join(IMG_FOLDER, img_files[2]))
-			self.img_right = pg.image.load(os.path.join(IMG_FOLDER, img_files[3]))
+			self.img_down = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[0])), (32, 48))
+			self.img_up = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[1])), (32, 48))
+			self.img_left = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[2])), (32, 48))
+			self.img_right = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[3])), (32, 48))
 		else:
 			self.img_up = pg.Surface((32, 48))
 			self.img_left = pg.Surface((32, 48))
@@ -317,31 +319,38 @@ class NPC(pg.sprite.Sprite):
 		if self.pos.distance_to(player.pos) < 80:
 			if player.dir.x == -1 and self.pos.x < player.pos.x:
 				self.image = self.img_right
+				self.game.director.scene.render()
 				self.game.director.scene_stack.append(self.game.director.scene)
 				self.speak()
 			elif player.dir.x == 1 and self.pos.x > player.pos.x:
 				self.image = self.img_left
+				self.game.director.scene.render()
 				self.game.director.scene_stack.append(self.game.director.scene)
 				self.speak()
 			elif player.dir.y == -1 and self.pos.y < player.pos.y:
 				self.image = self.img_down
+				self.game.director.scene.render()
 				self.game.director.scene_stack.append(self.game.director.scene)
 				self.speak()
 			elif player.dir.y == 1 and self.pos.y > player.pos.y:
 				self.image = self.img_up
+				self.game.director.scene.render()
 				self.game.director.scene_stack.append(self.game.director.scene)
 				self.speak()
-				self.start_game(1)
 
 	def speak(self):
 		print self.name
 		if self.name == 'Professor Bui':
 			print self.logic['spoken']
 			if not self.logic['spoken']:
+				self.start_game(1)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
 				self.logic['spoken'] = True
 			elif self.logic['spoken'] and not self.logic['completed']:
+				self.start_game(1)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+			elif self.logic['completed']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
 
 		elif self.name is 'Professor Emrich':
 			if not self.logic['spoken']:
@@ -374,4 +383,4 @@ class NPC(pg.sprite.Sprite):
 
 	def start_game(self, game):
 		if game is 1:
-			self.game.director.change_scene(systems.SpideyGame(self.game.director, self.game))
+			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))

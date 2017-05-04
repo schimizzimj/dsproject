@@ -94,12 +94,16 @@ class TopLevel(Level):
 			for wall in self.walls:
 				pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(wall.rect), 1)
 		for sprite in self.all_sprites:
-			if sprite.zoom > 0:
-				self.game.background.blit(pg.transform.scale(sprite.image, (sprite.rect.width * sprite.zoom, sprite.rect.height * sprite.zoom)), self.camera.apply(sprite))
-			else:
-				self.game.background.blit(sprite.image, self.camera.apply(sprite))
-			if self.draw_debug:
-				pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
+			if sprite.name != 'Player':
+				if sprite.zoom > 0:
+					self.game.background.blit(pg.transform.scale(sprite.image, (sprite.rect.width * sprite.zoom, sprite.rect.height * sprite.zoom)), self.camera.apply(sprite))
+				else:
+					self.game.background.blit(sprite.image, self.camera.apply(sprite))
+				if self.draw_debug:
+					pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
+		self.game.background.blit(pg.transform.scale(self.player.image, (self.player.rect.width, self.player.rect.height)), self.camera.apply(self.player))
+		if self.draw_debug:
+			pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(self.player.hit_rect), 1)
 		self.game.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))
 
 
@@ -173,12 +177,17 @@ class DebartLevel(Level):
 			for wall in self.walls:
 				pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(wall.rect), 1)
 		for sprite in self.all_sprites:
-			if sprite.zoom > 0:
-				self.game.background.blit(pg.transform.scale(sprite.image, (sprite.rect.width * sprite.zoom, sprite.rect.height * sprite.zoom)), self.camera.apply(sprite))
-			else:
-				self.game.background.blit(sprite.image, self.camera.apply(sprite))
-			if self.draw_debug:
-				pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
+			if sprite.name != 'Player':
+				if sprite.zoom > 0:
+					self.game.background.blit(pg.transform.scale(sprite.image, (sprite.rect.width * sprite.zoom, sprite.rect.height * sprite.zoom)), self.camera.apply(sprite))
+				else:
+					self.game.background.blit(sprite.image, self.camera.apply(sprite))
+				if self.draw_debug:
+					pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
+		self.game.background.blit(pg.transform.scale(self.player.image, (self.player.rect.width * self.player.zoom, self.player.rect.height * self.player.zoom)),
+			self.camera.apply(self.player))
+		if self.draw_debug:
+			pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(self.player.hit_rect), 1)
 		self.game.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))
 
 class ClassroomLevel(Level):
@@ -243,10 +252,15 @@ class ClassroomLevel(Level):
 			for wall in self.walls:
 				pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(wall.rect), 1)
 		for sprite in self.all_sprites:
-			if sprite.zoom > 0:
-				self.game.background.blit(pg.transform.scale(sprite.image, (sprite.rect.width * sprite.zoom, sprite.rect.height * sprite.zoom)), self.camera.apply(sprite))
-			else:
-				self.game.background.blit(sprite.image, self.camera.apply(sprite))
-			if self.draw_debug:
-				pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
+			if sprite.name != 'Player':
+				if sprite.zoom > 0:
+					self.game.background.blit(pg.transform.scale(sprite.image, (sprite.rect.width * sprite.zoom, sprite.rect.height * sprite.zoom)), self.camera.apply(sprite))
+				else:
+					self.game.background.blit(sprite.image, self.camera.apply(sprite))
+				if self.draw_debug:
+					pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
+		self.game.background.blit(pg.transform.scale(self.player.image, (self.player.rect.width * self.player.zoom, self.player.rect.height * self.player.zoom)),
+			self.camera.apply(self.player))
+		if self.draw_debug:
+			pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(self.player.hit_rect), 1)
 		self.game.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))

@@ -26,7 +26,7 @@ class Director(object):
 			self.dt = self.clock.tick(FPS) / 1000.0
 			if pg.event.get(pg.QUIT):
 				self.quit()
-			print self.scene
+
 			self.scene.events()
 			self.scene.update()
 			self.scene.render()

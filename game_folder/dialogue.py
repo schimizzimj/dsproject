@@ -9,7 +9,10 @@ game_json = {
 		{
 			'name': 'Professor Bui',
 			'rand': False,
-			'file': '',
+			'file': ['bui/bui1.png',
+					'bui/bui2.png',
+					'bui/bui3.png',
+					'bui/bui4.png'],
 			'dialogue': [
 				[
 					'~~WAKE ME UP! Wake me up inside.~~',
