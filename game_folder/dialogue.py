@@ -52,10 +52,14 @@ game_json = {
 		{
 			'name': 'Professsor Emrich',
 			'rand': False,
+<<<<<<< HEAD
 			'file': ['img/emrich/emrich1.png',
 					'img/emrich/emrich2.png',
 					'img/emrich/emrich3.png',
 					'img/emrich/emrich4.png'],
+=======
+			'file': './img/scott.png',
+>>>>>>> edeca9640ee61a577eb7050d60858bf71043f3b2
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
@@ -71,11 +75,12 @@ game_json = {
 		{
 			'name': 'Professsor Kumar',
 			'rand': False,
-			'file': '',
+			'file': './img/shreya.png',
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
-				'Are you ready for adventure?'
+				'Thanks for coming down to the front.'
+                'Here\'s a million points'
 				]
 			],
 			'logic': {
