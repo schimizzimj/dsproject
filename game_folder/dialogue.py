@@ -18,9 +18,9 @@ game_json = {
 					'~~WAKE ME UP! Wake me up inside.~~',
 					'Oh hello..',
 					'Welcome to Systems Programming!',
-					'Normally I would start class...'
-					'but hackers are attacking the student machines!'
-					'I need you to use spidey to shoot down the viruses.'
+					'Normally I would start class...',
+					'but hackers are attacking the student machines!',
+					'I need you to use spidey to shoot down the viruses.',
 					'Use the arrow keys to aim and the up arrow to shoot webs.'
 				],
 				[
