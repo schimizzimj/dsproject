@@ -73,6 +73,8 @@ class TopLevel(Level):
 						if self.player.pos.distance_to(squirrel.pos) < 50:
 							self.game.director.scene_stack.append(self.game.director.scene)
 							self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, squirrel.speech['name'], squirrel.speech['dialogue'], True))
+							if self.game.json['npcs'][5]['logic']['spoken']:
+								self.game.json['npcs'][5]['logic']['squirrels'] += 1
 
 					if self.player.pos.x > 1709 and self.player.pos.x < 1719:
 						if self.player.pos.y == 467 and self.player.dir.y == -1:
