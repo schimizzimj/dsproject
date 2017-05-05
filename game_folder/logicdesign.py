@@ -21,6 +21,8 @@ class card(object):
 		self.y = y
 		self.wid = 3 * sw / 16
 		self.hei = 3 * sh / 16
+		print SCREEN_SIZE
+		print self.wid
 		self.status = 0
 		if type == 1:
 			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "andgate.png"))
