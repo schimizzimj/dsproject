@@ -405,21 +405,9 @@ class NPC(pg.sprite.Sprite):
 		if game is 1:
 			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
 		if game is 2:
-<<<<<<< HEAD
 			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[option], False))
         	# data structures emrich
 		if game is 3:
 			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
-
-=======
-			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
->>>>>>> e3fb0221d33a9a088a745dd1da3076819b3a657d
-        	# data structures emrich
-		if game is 3:
-			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
 		if game is 4:
-<<<<<<< HEAD
 			self.game.director.scene_stack.append(logicdesign.logicGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[3], False)))
-=======
-			self.game.director.scene_stack.append(logicdesign.logicGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
->>>>>>> e3fb0221d33a9a088a745dd1da3076819b3a657d
