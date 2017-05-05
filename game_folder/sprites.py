@@ -10,6 +10,7 @@ from datetime import datetime
 import math
 import textbox
 import systems
+import emrichscene
 vec = pg.math.Vector2
 
 def collide_with_walls(sprite, group, dir):
