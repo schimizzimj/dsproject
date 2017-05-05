@@ -66,7 +66,6 @@ game_json = {
 					'emrich/emrich2.png',
 					'emrich/emrich3.png',
 					'emrich/emrich4.png'],
-			#'file': './img/scott.png',
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
@@ -111,6 +110,38 @@ game_json = {
 				['SQUEAK'],
 				['Squeak squeak squeak squeak']
 			]
-		}
+		},
+		{
+			'name': 'Professor Bualuan',
+			'rand': False,
+			'file': ['bui/bui1.png',
+					'bui/bui2.png',
+					'bui/bui3.png',
+					'bui/bui4.png'],
+			'dialogue': [
+				[
+					'~~WAKE ME UP! Wake me up inside.~~',
+					'Oh hello..',
+					'Welcome to Systems Programming!',
+					'Normally I would start class...',
+					'but hackers are attacking the student machines!',
+					'I need you to use spidey to shoot down the viruses.',
+					'Use the arrow keys to aim and the up arrow to shoot webs.'
+				],
+				[
+					'That did not go to well.',
+					"I'll give you an extension then."
+				],
+				[
+					'You did it! Congrats!',
+					'~~City of stars, are you shining just for me?~~',
+					'~~City of stars...'
+				]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
+		},
 	]
 }

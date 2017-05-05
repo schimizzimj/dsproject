@@ -35,7 +35,7 @@ class Game(scene.Scene):
 
 	def update(self):
 		self.level.update() # Call update() function for current level
-
+		
 	def change_level(self, level):
 		''' Transition between levels '''
 		self.screen.fill(BLACK)
