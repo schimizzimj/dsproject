@@ -375,12 +375,23 @@ class NPC(pg.sprite.Sprite):
 
 		elif self.name is 'Professor Bualuan':
 			if not self.logic['spoken']:
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.start_game(2)
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.game.level.player.name, self.dialogue[0], False))
 				self.logic['spoken'] = True
+			elif self.logic['squirrels'] >= 3:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
+				randnum = random.random()
+				if randnum >= 0.5:
+					self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[3], False))
+				else:
+					self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[4], False))
 			else:
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[5], False))
 
 
 	def start_game(self, game):
 		if game is 1:
 			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
+		if game is 2:
+			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
