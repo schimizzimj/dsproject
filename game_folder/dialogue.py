@@ -133,6 +133,9 @@ game_json = {
 				],
 				[
 					'7:50, better luck next semester.'
+				],
+				[
+					'Come to Salsa Night at Legends!'
 				]
 			],
 			'logic': {
