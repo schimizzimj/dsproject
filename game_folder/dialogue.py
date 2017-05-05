@@ -114,28 +114,24 @@ game_json = {
 		{
 			'name': 'Professor Bualuan',
 			'rand': False,
-			'file': ['bui/bui1.png',
-					'bui/bui2.png',
-					'bui/bui3.png',
-					'bui/bui4.png'],
+			'file': ['bualuan/bualuan1.png',
+					'bualuan/bualuan2.png',
+					'bualuan/bualuan3.png',
+					'bualuan/bualuan4.png'],
 			'dialogue': [
 				[
-					'~~WAKE ME UP! Wake me up inside.~~',
-					'Oh hello..',
-					'Welcome to Systems Programming!',
-					'Normally I would start class...',
-					'but hackers are attacking the student machines!',
-					'I need you to use spidey to shoot down the viruses.',
-					'Use the arrow keys to aim and the up arrow to shoot webs.'
+					'Hi, what is your last name?'
 				],
 				[
-					'That did not go to well.',
-					"I'll give you an extension then."
+					'Do you know the course number for Data Structures?'
 				],
 				[
-					'You did it! Congrats!',
-					'~~City of stars, are you shining just for me?~~',
-					'~~City of stars...'
+					'Are you sure you know what courses you have to take?'
+					'Okay, here you go.'
+				],
+				[	
+					'6:55, good time!'
+					'7:50, better luck next semester.'
 				]
 			],
 			'logic': {
