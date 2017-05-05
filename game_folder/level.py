@@ -107,7 +107,7 @@ class TopLevel(Level):
 						self.game.json['npcs'][2]['logic']['completed'] and \
 							self.game.json['npcs'][3]['logic']['completed']:
 					pass
-				
+
 
 	def update(self):
 		self.all_sprites.update()
@@ -306,11 +306,14 @@ class FitzpatrickLevel(Level):
 		self.overlay_img = pg.transform.scale(self.overlay_img, (self.scale*image_size[0], self.scale*image_size[1]))
 		self.map_rect = self.map_img.get_rect()
 		self.all_sprites = pg.sprite.Group()
+		self.npcs = pg.sprite.Group()
 		self.walls = pg.sprite.Group()
 		for tile_object in self.map.tmxdata.objects:
 			if tile_object.name == 'wall':
 				sprites.Obstacle(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y,
 					self.scale*tile_object.width, self.scale*tile_object.height)
+			if tile_object.name == 'NPC':
+				sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
 			if tile_object.name == 'player' and int(tile_object.entrance) == self.entrance:
 				self.player = sprites.Player(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y, 1);
 		self.camera = tilemap.Camera(self.scale*self.map.width, self.scale*self.map.height)
@@ -323,6 +326,9 @@ class FitzpatrickLevel(Level):
 					self.game.director.change_scene(self.game.director.scene_stack.pop()) # Return to menu
 				if event.key == pg.K_h:
 					self.draw_debug = not self.draw_debug
+				if event.key == pg.K_SPACE:
+					for npc in self.npcs:
+						npc.events()
 
 		if self.player.pos.x >= 466 and self.player.pos.x <= 558:
 				if self.player.pos.y == 1498 and self.player.dir.y == 1:
