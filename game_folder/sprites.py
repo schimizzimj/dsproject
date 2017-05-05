@@ -353,6 +353,7 @@ class NPC(pg.sprite.Sprite):
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
 
 		elif self.name is 'Professor Emrich':
+			
 			if not self.logic['spoken']:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
 				self.logic['spoken'] = True
@@ -394,4 +395,3 @@ class NPC(pg.sprite.Sprite):
 			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
 		if game is 2:
 			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
-
