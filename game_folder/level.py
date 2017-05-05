@@ -31,12 +31,17 @@ class Level(object):
 
 class TopLevel(Level):
 	def __init__(self, game, entrance=0):
-		Level.__init__(self, game, entrance)
+		Level.__init__(self, game, entrance) # call parent __init__
 		self.scale = 2
+		self.counter = 0
 		self.name = 'top_world'
 		self.load()
 
 	def load(self):
+		'''
+		This load() function is nearly the same for each level, differing only in
+		the name of the map to load in and creating the necessary sprite groups.
+		'''
 		self.map = tilemap.TiledMap(path.join(self.game.map_folder, 'top_world.tmx'))
 		self.map_img = self.map.make_map()
 		self.overlay_img = self.map.make_overlay()
@@ -56,6 +61,7 @@ class TopLevel(Level):
 		self.camera = tilemap.Camera(self.scale*self.map.width, self.scale*self.map.height)
 		self.draw_debug = False
 		for x in range(0, random.randrange(5, 10)):
+			# spawn in a random number of squirrels from this range
 			x_pos = (self.scale * self.map.width) * random.random()
 			y_pos = (self.scale * self.map.height) * random.random()
 			self.ai = sprites.Squirrels(self, self.game, x_pos, y_pos, 0)
@@ -66,12 +72,15 @@ class TopLevel(Level):
 				if event.key == pg.K_ESCAPE:
 					self.game.director.change_scene(self.game.director.scene_stack.pop()) # Return to menu
 				if event.key == pg.K_h:
-					self.draw_debug = not self.draw_debug
+					self.draw_debug = not self.draw_debug # anytime this appears, it refers to a debugging feature
+														  # that displays the hit_rects in cyan
 				if event.key == pg.K_SPACE:
 
 					for squirrel in self.squirrels:
+						# have squirrel speak if player presses space within a
+						# close enough distance
 						if self.player.pos.distance_to(squirrel.pos) < 50:
-							self.game.director.scene_stack.append(self.game.director.scene)
+							self.game.director.scene_stack.append(self.game.director.scene) # add current scene to stack so textbox can pop it off
 							self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, squirrel.speech['name'], squirrel.speech['dialogue'], True))
 							if self.game.json['npcs'][5]['logic']['spoken']:
 								self.game.json['npcs'][5]['logic']['squirrels'] += 1
@@ -82,20 +91,38 @@ class TopLevel(Level):
 							 	self.game.json['npcs'][1]['logic']['completed'] and \
 									self.game.json['npcs'][2]['logic']['completed'] and \
 										self.game.json['npcs'][3]['logic']['completed']:
-								self.game.change_level(Library(self.game, 0))
+								self.game.change_level(Library(self.game, 0)) # opens door to library, essentially, allowing victory
 							else:
+								# Gives message saying the door is still locked
 								self.game.director.scene_stack.append(self.game.director.scene)
 								self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, None, ["This door is locked."], False))
 
 		if self.player.pos.x > 1455 and self.player.pos.x < 1492:
+			# checks if user enters debart, and from what entrance
 			if self.player.pos.y == 1363 and self.player.dir.y == -1:
-				self.game.level_stack.append(self.game.level)
-				self.game.change_level(DebartLevel(self.game, 0))
+				if self.game.json['npcs'][5]['logic']['completed']:
+					self.game.level_stack.append(self.game.level)
+					self.game.change_level(DebartLevel(self.game, 0))
+				elif self.counter > FPS:
+					self.counter = 0
+					self.game.director.scene_stack.append(self.game.director.scene)
+					self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, None, ["This door is locked.", "Protip: Go get your PIN from Ramzi in Fitzpatrick first."], False))
+				else:
+					self.counter += 1
+
 			elif self.player.pos.y == 685 and self.player.dir.y == 1:
-				self.game.level_stack.append(self.game.level)
-				self.game.change_level(DebartLevel(self.game, 1))
+				if self.game.json['npcs'][5]['logic']['completed']:
+					self.game.level_stack.append(self.game.level)
+					self.game.change_level(DebartLevel(self.game, 1))
+				elif self.counter > FPS:
+					self.counter = 0
+					self.game.director.scene_stack.append(self.game.director.scene)
+					self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, None, ["This door is locked.", "Protip: Go get your PIN from Ramzi in Fitzpatrick first."], False))
+				else:
+					self.counter += 1
 
 		if self.player.pos.x > 1143 and self.player.pos.x < 1165:
+			# checks if user enters fitz, hardcoding unfortunately somewhat necessary here
 			if self.player.pos.y == 563 and self.player.dir.y == -1:
 				self.game.level_stack.append(self.game.level)
 				self.game.change_level(FitzpatrickLevel(self.game, 0))
@@ -106,7 +133,7 @@ class TopLevel(Level):
 				 	self.game.json['npcs'][1]['logic']['completed'] and \
 						self.game.json['npcs'][2]['logic']['completed'] and \
 							self.game.json['npcs'][3]['logic']['completed']:
-								self.game.change_level(Library(self.game, 0))
+								self.game.change_level(Library(self.game, 0)) # allows user to enter without pressing space, earlier instance perhaps redundant
 
 	def update(self):
 		self.all_sprites.update()
@@ -118,7 +145,7 @@ class TopLevel(Level):
 			for wall in self.walls:
 				pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(wall.rect), 1)
 		for sprite in self.all_sprites:
-			if sprite.name != 'Player':
+			if sprite.name != 'Player': # draw all sprites except for player
 				if sprite.zoom > 0:
 					self.game.background.blit(pg.transform.scale(sprite.image, (sprite.rect.width * sprite.zoom, sprite.rect.height * sprite.zoom)), self.camera.apply(sprite))
 				else:
@@ -128,7 +155,7 @@ class TopLevel(Level):
 		self.game.background.blit(pg.transform.scale(self.player.image, (self.player.rect.width, self.player.rect.height)), self.camera.apply(self.player))
 		if self.draw_debug:
 			pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(self.player.hit_rect), 1)
-		self.game.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))
+		self.game.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect)) # draws overlay last, should show over player and other sprites
 
 
 class DebartLevel(Level):
@@ -165,19 +192,19 @@ class DebartLevel(Level):
 				if event.key == pg.K_h:
 					self.draw_debug = not self.draw_debug
 
+		# Checks for the player leaving debart
 		if self.player.pos.x > 108 and self.player.pos.x < 162:
 			if self.player.pos.y == 166 and self.player.dir.y == -1:
-				#self.game.change_level(TopLevel(self.game, 1))
 				next_level = self.game.level_stack.pop()
 				next_level.player.pos = vec(1472, 675)
 				self.game.change_level(next_level)
 		if self.player.pos.x > 81 and self.player.pos.x < 176:
 			if self.player.pos.y == 2010 and self.player.dir.y == 1:
-				#self.game.change_level(TopLevel(self.game, 2))
 				next_level = self.game.level_stack.pop()
 				next_level.player.pos = vec(1473, 1365)
 				self.game.change_level(next_level)
 
+		# checks for the player entering a classroom
 		if self.player.pos.x >= 594 and self.player.pos.x <= 622:
 			if self.player.pos.y == 614 and self.player.dir.y == -1:
 				self.game.level_stack.append(self.game.level)
@@ -221,10 +248,12 @@ class ClassroomLevel(Level):
 		self.room = room
 		self.name = 'classroom'
 		self.load()
-		print "here"
-
 
 	def load(self):
+		'''
+		Essentially the same load procedure as for the other indoor places,
+		except it has to check which room it is and it spawns NPCs
+		'''
 		if self.room is 102:
 			self.map = tilemap.TiledMap(path.join(self.game.map_folder, '102.tmx'))
 		elif self.room is 101:

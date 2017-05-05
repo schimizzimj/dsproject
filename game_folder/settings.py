@@ -1,3 +1,8 @@
+'''
+File used to store all basic variables that will be needed by
+many other files
+'''
+
 import pygame as pg
 from os import path
 vec = pg.math.Vector2

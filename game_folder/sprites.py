@@ -37,12 +37,6 @@ def collide_with_walls(sprite, group, dir):
 			sprite.vel.y = 0
 			sprite.hit_rect.centery = sprite.pos.y
 
-def sprite_collide(sprite, group):
-	for member in group:
-		if pg.sprite.collide_rect(sprite, member):
-			return True
-	return False
-
 class Player(pg.sprite.Sprite):
 	def __init__(self, level, game, x, y, zoom):
 		self.groups = level.all_sprites
@@ -108,6 +102,10 @@ class Player(pg.sprite.Sprite):
 
 
 	def get_keys(self):
+		'''
+		Processes how to update player image, velocity and direction based
+		on the key(s) pressed
+		'''
 		self.vel = vec(0, 0)
 		keys = pg.key.get_pressed()
 		if keys[pg.K_UP] or keys[pg.K_w]:
@@ -138,9 +136,10 @@ class Player(pg.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.inflate_ip(self.rect.width * self.zoom, self.rect.height * self.zoom)
 		self.rect.center = self.pos
-		self.prev = self.pos
-		self.pos += self.vel * self.game.dt
+		self.pos += self.vel * self.game.dt # update position
 		self.hit_rect.centerx = self.pos.x
+
+		# Check for collsions with walls and if in top world, squirrels
 		collide_with_walls(self, self.level.walls, 'x')
 		self.hit_rect.centery = self.pos.y
 		collide_with_walls(self, self.level.walls, 'y')
@@ -153,6 +152,10 @@ class Player(pg.sprite.Sprite):
 
 class Obstacle(pg.sprite.Sprite):
 	def __init__(self, level, game, x, y, w, h):
+		'''
+		Class that simply spawns in everywhere there are walls, and does not
+		allow other sprites to pass
+		'''
 		self.groups = level.walls
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
@@ -170,8 +173,8 @@ class Squirrels(pg.sprite.Sprite):
 		self.game = game
 		self.name = 'Squirrel'
 		self.level = level
-		random.seed(datetime.now())
-		self.zoom = zoom
+		random.seed(datetime.now()) # seed the randomness
+		self.zoom = zoom # allows for squirrels to scale to environment, not actually needed in the end
 		self.speech = game.json['npcs'][4]
 
 		# Load player spritesheet
@@ -212,6 +215,7 @@ class Squirrels(pg.sprite.Sprite):
 		image = ss.image_at((65, 224, 32, 32), colorkey = WHITE)
 		self.img_up.append(image)
 
+		# Declare some needed variables
 		self.image = self.img_down[0]
 		self.vel = vec(1, 1)
 		self.pos = vec(x, y)
@@ -219,40 +223,50 @@ class Squirrels(pg.sprite.Sprite):
 		self.rect.center = self.pos
 		self.hit_rect = pg.Rect(0, 0, 16, 16)
 		self.hit_rect.center = self.rect.center
-		self.step = 1001
-		self.wander_angle = 0
-		self.circle_dist = 50
-		self.max_velocity = 150
-		self.circle_radius = 10
-		self.angle_change = math.pi / 4
+		self.step = 1001 # step initially set high so squirrel will move immediately
+		# self.wander_angle = 0
+		# self.circle_dist = 50
+		# self.max_velocity = 150
+		# self.circle_radius = 10
+		# self.angle_change = math.pi / 4
 
 
 
 
 
 	def move(self):
+		'''
+		Very simple AI implementation that just chooses a random direction and
+		speed for x and y every time the step count exceeds some random threshold
+		'''
 		threshold = random.randrange(FPS,20*FPS)
 		if self.step >= threshold:
-			self.vel.x = ((2*PLAYER_SPEED)*random.random()) - 200
-			self.vel.y = ((2*PLAYER_SPEED)*random.random()) - 200
+			self.vel.x = ((2*PLAYER_SPEED)*random.random()) - PLAYER_SPEED
+			self.vel.y = ((2*PLAYER_SPEED)*random.random()) - PLAYER_SPEED
 			self.step = 0
 			threshold = random.randrange(FPS,20*FPS)
 		self.step += 1
 
-	def wander(self):
-		# Generate Reynold's Wander circle
-		if self.vel.x and self.vel.y:
-			circle_center = self.vel
-			circle_center = circle_center * self.circle_dist
-			dx = math.cos(self.wander_angle)
-			dy = math.sin(self.wander_angle)
-			displacement = vec(dx, dy) * self.circle_radius
-			self.wander_angle += (random.random() - 0.5) * self.angle_change
-			self.vel += circle_center + displacement
+	# Sadly, not implemented, but it would have been way cooler AI for the
+	# squirrels
+	# def wander(self):
+	# 	# Generate Reynold's Wander circle
+	# 	if self.vel.x and self.vel.y:
+	# 		circle_center = self.vel
+	# 		circle_center = circle_center * self.circle_dist
+	# 		dx = math.cos(self.wander_angle)
+	# 		dy = math.sin(self.wander_angle)
+	# 		displacement = vec(dx, dy) * self.circle_radius
+	# 		self.wander_angle += (random.random() - 0.5) * self.angle_change
+	# 		return circle_center + displacement
 
 	def update(self):
+		'''
+		Update the position of the squirrels based on the random movement move()
+		function, change image based on position, update rects, and check for
+		collisions.
+		'''
 		self.move()
-
 		if self.vel.x > 0:
 			frame = (self.pos.x // 5) % len(self.img_right)
 			self.image = self.img_right[int(frame)]
@@ -279,20 +293,24 @@ class NPC(pg.sprite.Sprite):
 		self.groups = level.npcs, level.all_sprites, level.walls
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.pos = vec(x, y)
+
+		# grab proper variables from the dialogue.py file for this NPC
 		self.rand = data['rand']
 		self.dialogue = data['dialogue']
 		self.name = data['name']
 		self.logic = data['logic']
 		img_files = data['file']
 		self.level = level
-		self.zoom = 1
+		self.zoom = 1 # allows resizing of the NPC to match map size
 		self.game = level.game
 		if img_files:
+			# load four directions of image files
 			self.img_down = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[0])), (32, 48))
 			self.img_up = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[1])), (32, 48))
 			self.img_left = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[2])), (32, 48))
 			self.img_right = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[3])), (32, 48))
 		else:
+			# Serves as a fallback in case an image file doesn't exist/doesn't load properly
 			self.img_up = pg.Surface((32, 48))
 			self.img_left = pg.Surface((32, 48))
 			self.img_right = pg.Surface((32, 48))
@@ -301,6 +319,7 @@ class NPC(pg.sprite.Sprite):
 			self.img_left.fill(TEAL)
 			self.img_right.fill(RED)
 			self.img_down.fill(GREEN)
+		# allows an NPC to be spawned in with a certain desired direction
 		if dir is 'n' or 'N':
 			self.image = self.img_down
 		elif dir is 's' or 'S':
@@ -319,6 +338,8 @@ class NPC(pg.sprite.Sprite):
 	def events(self):
 		player = self.level.player
 		if self.pos.distance_to(player.pos) < 80:
+			# Check player's proximity to the NPC and adjust the image accordingly
+			# Also, perform correct action for player speaking to NPC
 			if player.dir.x == -1 and self.pos.x < player.pos.x:
 				self.image = self.img_right
 				self.game.director.scene.render()
@@ -341,6 +362,10 @@ class NPC(pg.sprite.Sprite):
 				self.speak()
 
 	def speak(self):
+		'''
+		This function is used to determine the logic of what should be said based
+		on who the NPC is and what has already been completed in the game.
+		'''
 		if self.name == 'Professor Bui':
 			if not self.logic['spoken']:
 				self.start_game(1)
@@ -390,7 +415,7 @@ class NPC(pg.sprite.Sprite):
 			elif self.logic['squirrels'] >= 3 and not self.logic['completed']:
 				self.logic['completed'] = True
 				randnum = random.random()
-				if randnum >= 0.5:
+				if randnum >= 0.5: # randomly select one of these two dialogue options
 					self.start_game(2, 3)
 				else:
 					self.start_game(2, 4)
@@ -398,10 +423,15 @@ class NPC(pg.sprite.Sprite):
 			else:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[5], False))
 		else:
-			print "sadness" # If you reach this line, sadness has fallen upon you. 
+			print "sadness" # If you reach this line, sadness has fallen upon you.
 
 
 	def start_game(self, game, option=0):
+		'''
+		This helper function is used in order to append games to the scene_stack before calling the textbox scene,
+		in order to allow the scenes to properly sequence. Without this, there were some issues of the program skipping
+		the text and going straight to the game. Additonally, the "game is 2" segment helps cut out some code.
+		'''
 		if game is 1:
 			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
 		if game is 2:
@@ -409,6 +439,5 @@ class NPC(pg.sprite.Sprite):
         	# data structures emrich
 		if game is 3:
 			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
-
 		if game is 4:
 			self.game.director.scene_stack.append(logicdesign.logicGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[3], False)))

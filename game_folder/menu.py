@@ -35,6 +35,10 @@ class Item(pygame.font.Font):
 		self.label = self.render(self.text, 1, self.font_color)
 
 	def mouse_hover(self, (posx, posy)):
+		'''
+		Returns a bool; True if the mouse is hovering over
+		it and false otherwise
+		'''
 		if (posx >= self.pos_x and posx <= self.pos_x + self.width) and \
 			(posy >= self.pos_y and posy <= self.pos_y + self.height):
 				return True

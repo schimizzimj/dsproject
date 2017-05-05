@@ -9,6 +9,10 @@ def collide_hit_rect(one, two):
 	return one.hit_rect.colliderect(two.hit_rect)
 
 class TiledMap(object):
+	'''
+	This class simply loads in a map stored in a .tmx file
+	that was created by Tiled
+	'''
 	def __init__(self, filename):
 		tm = load_pygame(filename, pixelalpha=True)
 		self.width = tm.width * tm.tilewidth
@@ -47,24 +51,28 @@ class TiledMap(object):
 		return temp_surface
 
 class Camera:
-  def __init__(self, width, height):
-    self.camera = pg.Rect(0, 0, width, height)
-    self.width = width
-    self.height = height
+	'''
+	This class is used to create a scrolling camera that can be
+	used to follow any sprite as they move around the map.
+	'''
+	def __init__(self, width, height):
+		self.camera = pg.Rect(0, 0, width, height)
+		self.width = width
+		self.height = height
 
-  def apply(self, entity):
-    return entity.rect.move(self.camera.topleft)
+	def apply(self, entity):
+		return entity.rect.move(self.camera.topleft)
 
-  def apply_rect(self, rect):
-    return rect.move(self.camera.topleft)
+	def apply_rect(self, rect):
+		return rect.move(self.camera.topleft)
 
-  def update(self, target):
-    x = -target.rect.x + int(WIDTH / 2)
-    y = -target.rect.y + int(HEIGHT / 2)
+	def update(self, target):
+		x = -target.rect.x + int(WIDTH / 2)
+		y = -target.rect.y + int(HEIGHT / 2)
 
-    # limit scrolling
-    x = min(0, x)
-    x = max(-(self.width - WIDTH), x)
-    y = min(0, y)
-    y = max(-(self.height - HEIGHT), y)
-    self.camera = pg.Rect(x, y, self.width, self.height)
+		# limit scrolling
+		x = min(0, x)
+		x = max(-(self.width - WIDTH), x)
+		y = min(0, y)
+		y = max(-(self.height - HEIGHT), y)
+		self.camera = pg.Rect(x, y, self.width, self.height)
