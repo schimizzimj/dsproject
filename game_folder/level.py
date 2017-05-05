@@ -358,3 +358,70 @@ class FitzpatrickLevel(Level):
 		if self.draw_debug:
 			pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(self.player.hit_rect), 1)
 		self.game.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))
+
+class Library(Level):
+	def __init__(self, game, room, entrance=0):
+		Level.__init__(self, game, entrance)
+		self.scale = 4
+		self.room = room
+		self.name = 'classroom'
+		self.load()
+
+	def load(self):
+		if self.room is 102:
+			self.map = tilemap.TiledMap(path.join(self.game.map_folder, '102.tmx'))
+		elif self.room is 101:
+			self.map = tilemap.TiledMap(path.join(self.game.map_folder, '101.tmx'))
+		elif self.room is 141:
+			self.map = tilemap.TiledMap(path.join(self.game.map_folder, '141.tmx'))
+		self.map_img = self.map.make_map()
+		self.overlay_img = self.map.make_overlay()
+		image_size = self.map_img.get_size()
+		self.map_img = pg.transform.scale(self.map_img, (self.scale*image_size[0], self.scale*image_size[1]))
+		self.overlay_img = pg.transform.scale(self.overlay_img, (self.scale*image_size[0], self.scale*image_size[1]))
+		self.map_rect = self.map_img.get_rect()
+		self.all_sprites = pg.sprite.Group()
+		self.npcs = pg.sprite.Group()
+		self.walls = pg.sprite.Group()
+		for tile_object in self.map.tmxdata.objects:
+			if tile_object.name == 'wall':
+				sprites.Obstacle(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y,
+					self.scale*tile_object.width, self.scale*tile_object.height)
+			if tile_object.name == 'NPC':
+				sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
+			if tile_object.name == 'player' and int(tile_object.entrance) == self.entrance:
+				self.player = sprites.Player(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y, 1)
+		self.camera = tilemap.Camera(self.scale*self.map.width, self.scale*self.map.height)
+		self.draw_debug = False
+
+	def events(self):
+		for event in pg.event.get():
+			if event.type == pg.KEYDOWN:
+				if event.key == pg.K_ESCAPE:
+					self.game.director.change_scene(self.game.director.scene_stack.pop()) # Return to menu
+				if event.key == pg.K_h:
+					self.draw_debug = not self.draw_debug
+		self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, "All", "Congratulations!"))
+
+	def update(self):
+		self.all_sprites.update()
+		self.camera.update(self.player)
+
+	def render(self):
+		self.game.background.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+		if self.draw_debug:
+			for wall in self.walls:
+				pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(wall.rect), 1)
+		for sprite in self.all_sprites:
+			if sprite.name != 'Player':
+				if sprite.zoom > 0:
+					self.game.background.blit(pg.transform.scale(sprite.image, (sprite.rect.width * sprite.zoom, sprite.rect.height * sprite.zoom)), self.camera.apply(sprite))
+				else:
+					self.game.background.blit(sprite.image, self.camera.apply(sprite))
+				if self.draw_debug:
+					pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
+		self.game.background.blit(pg.transform.scale(self.player.image, (self.player.rect.width * self.player.zoom, self.player.rect.height * self.player.zoom)),
+			self.camera.apply(self.player))
+		if self.draw_debug:
+			pg.draw.rect(self.game.background, CYAN, self.camera.apply_rect(self.player.hit_rect), 1)
+		self.game.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))
