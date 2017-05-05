@@ -5,8 +5,10 @@ import sys
 from os import path
 from settings import *
 from sprites import *
+import scene
+import dialogue
 
-class emrichscene(scene.Scene):
+class DataStructures(scene.Scene):
     def __init__(self, director):
         # make screen
         pg.init()
@@ -146,16 +148,3 @@ class emrichscene(scene.Scene):
             screen.blit(bigFont.render("Correct!", True, WHITE), (WIDTH/3, HEIGHT/2))
         else:
             screen.blit(bigFont.render("Not quite! Try again later", True, WHITE), (WIDTH/3, HEIGHT/2))
-
-
-
-
-
-
-
-
-
-
-
-
-drawARect()
