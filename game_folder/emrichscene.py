@@ -6,8 +6,10 @@ from os import path
 import scene
 from settings import *
 from sprites import *
+import scene
+import dialogue
 
-class emrichscene(scene.Scene):
+class DataStructures(scene.Scene):
     def __init__(self, director):
         # make screen
         pg.init()
