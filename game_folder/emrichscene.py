@@ -16,10 +16,12 @@ class DataStructures(scene.Scene):
         self.game = game
         # make screen
         pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT), 0, 32)
-        pg.display.set_caption("Data Structures")
+#        self.screen = pg.display.set_mode((WIDTH, HEIGHT), 0, 32)
+	self.screen = self.game.director.screen
+	pg.display.set_caption("Data Structures")
         self.font = pg.font.Font(pg.font.get_default_font(), 16)
         self.screen.fill(WHITE)
+	self.post_win = post_win
 
         # set vars
 	self.changed = True
@@ -157,11 +159,16 @@ class DataStructures(scene.Scene):
         self.screen.blit(self.font.render("Press the green button when done.", True, BLACK), (WIDTH/3, HEIGHT/13+60))
 
     def endGame(self):
-        self.screen.fill(TEAL)
-        bigFont = pg.font.Font(pg.font.get_default_font(), 48)
+        #self.screen.fill(TEAL)
+        #bigFont = pg.font.Font(pg.font.get_default_font(), 48)
         if self.xA < self.xBST < self.xLL:
-            # correct order
-            self.screen.blit(bigFont.render("Correct!", True, WHITE), (WIDTH/3, HEIGHT/2))
+		self.game.json['npcs'][0]['logic']['completed'] = True
+		self.game.director.change_scene(self.game.director.scene_stack[-1])
+		self.game.director.scene.render()
+		self.game.director.change_scene(self.post_win)
+         #   self.screen.blit(bigFont.render("Correct!", True, WHITE), (WIDTH/3, HEIGHT/2))
+	# lose, go back
         else:
-            self.screen.blit(bigFont.render("Not quite! Try again later", True, WHITE), (WIDTH/3, HEIGHT/2))
+        	self.game.director.change_scene(self.game.director.scene_stack.pop())
+	#    self.screen.blit(bigFont.render("Not quite! Try again later", True, WHITE), (WIDTH/3, HEIGHT/2))
 	pg.display.update()
