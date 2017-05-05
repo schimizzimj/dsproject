@@ -3,6 +3,7 @@
 import pygame as pg
 import sys
 from os import path
+import scene
 from settings import *
 from sprites import *
 
@@ -14,7 +15,7 @@ class emrichscene(scene.Scene):
         pg.display.set_caption("Data Structures")
         font = pg.font.Font(pg.font.get_default_font(), 12)
         self.screen.fill(WHITE)
-        
+
         # set vars
         # width, height
         self.w = 150
@@ -24,7 +25,7 @@ class emrichscene(scene.Scene):
         self.drag = False
         # height of first rectangle
         self.hi = HEIGHT/4-w/2
-        
+
         # rectangle vars
         self.xBST = WIDTH/2-w/2
         self.yBST = hi
@@ -32,7 +33,7 @@ class emrichscene(scene.Scene):
         self.yLL = hi + 3*h
         self.xA = WIDTH/2-w/2
         self.yA = hi + 6*h
-        
+
         # ellipsis vars
         self.xe = 0
         self.ye = 0
@@ -146,16 +147,3 @@ class emrichscene(scene.Scene):
             screen.blit(bigFont.render("Correct!", True, WHITE), (WIDTH/3, HEIGHT/2))
         else:
             screen.blit(bigFont.render("Not quite! Try again later", True, WHITE), (WIDTH/3, HEIGHT/2))
-
-
-
-
-
-
-
-
-
-
-
-
-drawARect()

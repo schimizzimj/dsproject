@@ -82,10 +82,11 @@ class TopLevel(Level):
 							 	self.game.json['npcs'][1]['logic']['completed'] and \
 									self.game.json['npcs'][2]['logic']['completed'] and \
 										self.game.json['npcs'][3]['logic']['completed']:
-								pass
+								self.game.director.change_scene(Library(self.game, 0))
 							else:
-								self.game.director.scene_stack.append(self.game.director.scene)
-								self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, None, ["This door is locked."], False))
+								# self.game.director.scene_stack.append(self.game.director.scene)
+								# self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, None, ["This door is locked."], False))
+								self.game.director.change_scene(Library(self.game, 0))
 
 		if self.player.pos.x > 1455 and self.player.pos.x < 1492:
 			if self.player.pos.y == 1363 and self.player.dir.y == -1:
@@ -364,16 +365,12 @@ class Library(Level):
 		Level.__init__(self, game, entrance)
 		self.scale = 4
 		self.room = room
-		self.name = 'classroom'
+		self.name = 'library'
+		self.counter = 0
 		self.load()
 
 	def load(self):
-		if self.room is 102:
-			self.map = tilemap.TiledMap(path.join(self.game.map_folder, '102.tmx'))
-		elif self.room is 101:
-			self.map = tilemap.TiledMap(path.join(self.game.map_folder, '101.tmx'))
-		elif self.room is 141:
-			self.map = tilemap.TiledMap(path.join(self.game.map_folder, '141.tmx'))
+		self.map = tilemap.TiledMap(path.join(self.game.map_folder, 'library.tmx'))
 		self.map_img = self.map.make_map()
 		self.overlay_img = self.map.make_overlay()
 		image_size = self.map_img.get_size()
@@ -401,11 +398,14 @@ class Library(Level):
 					self.game.director.change_scene(self.game.director.scene_stack.pop()) # Return to menu
 				if event.key == pg.K_h:
 					self.draw_debug = not self.draw_debug
-		self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, "All", "Congratulations!"))
+		if self.counter >= 5:
+					#self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, "All", ["Congratulations!"], False))
+					pass
 
 	def update(self):
 		self.all_sprites.update()
 		self.camera.update(self.player)
+		self.counter += 1
 
 	def render(self):
 		self.game.background.blit(self.map_img, self.camera.apply_rect(self.map_rect))

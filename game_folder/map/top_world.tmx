@@ -215,7 +215,7 @@
   </object>
   <object id="73" name="wall" x="128" y="348" width="384" height="4"/>
   <object id="74" name="wall" x="128" y="352" width="4" height="288"/>
-  <object id="75" name="wall" x="128" y="640" width="384" height="16"/>
+  <object id="75" name="wall" x="128" y="640" width="384" height="4"/>
   <object id="76" name="wall" x="508" y="352" width="4" height="288"/>
  </objectgroup>
  <layer name="overlay" width="64" height="48">

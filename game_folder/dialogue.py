@@ -85,7 +85,7 @@ game_json = {
 		{
 			'name': 'Professor Kumar',
 			'rand': False,
-			'file': 'shreya.png',
+			'file': '',
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
@@ -106,10 +106,12 @@ game_json = {
 		{
 			'name': 'Squirrel',
 			'rand': True,
+			'file': '',
 			'dialogue': [
 				['SQUEAK'],
 				['Squeak squeak squeak squeak']
-			]
+			],
+			'logic': {}
 		},
 		{
 			'name': 'Professor Bualuan',
@@ -128,7 +130,7 @@ game_json = {
 				[
 					'Good job! Here you go.'
 				],
-				[	
+				[
 					'6:55, good time!'
 				],
 				[
@@ -142,7 +144,7 @@ game_json = {
 				'spoken': False,
 				'completed': False,
 				'squirrels': 0,
-				
+
 			}
 		},
 	]
