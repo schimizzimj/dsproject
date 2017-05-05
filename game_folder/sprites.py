@@ -355,7 +355,11 @@ class NPC(pg.sprite.Sprite):
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
 
 		elif self.name == 'Professor Emrich':
+<<<<<<< HEAD
+			
+=======
 
+>>>>>>> 2b0e89b35d040af038556449066abdeccf8cda28
 			if not self.logic['spoken']:
 				#self.start_game(3)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
@@ -401,9 +405,16 @@ class NPC(pg.sprite.Sprite):
 			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
 		if game is 2:
 			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+<<<<<<< HEAD
+        	# data structures emrich
+		if game is 3:
+			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
+
+=======
 
         	# data structures emrich
 		if game is 3:
 			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
 		if game is 4:
 			self.game.director.scene_stack.append(logicdesign.logicGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
+>>>>>>> 2b0e89b35d040af038556449066abdeccf8cda28

@@ -9,6 +9,7 @@ from sprites import *
 import scene
 import dialogue
 
+# ordering data structures horizontally
 class DataStructures(scene.Scene):
     def __init__(self, director):
         # make screen
