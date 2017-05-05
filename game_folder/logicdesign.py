@@ -67,22 +67,25 @@ class logicGame(scene.Scene):
 			for q in [1, 2, 3, 4]:
 				self.cardList.append(card(self.typeList.pop(), p*sw/4-sw/8, q*sh/4-sh/8))
 		self.counter = 0
+
 	def events(self):
 		event = pygame.event.poll()
 		if event.type == pygame.MOUSEBUTTONDOWN and self.cardsFlipped < 2:
 			self.coords = pygame.mouse.get_pos()
 			for crd in self.cardList:
 				if abs(crd.x - self.coords[0]) < crd.wid/2 and abs(crd.y-self.coords[1]) < crd.hei/2:
-					crd.status = 1
-					if self.cardsFlipped == 0 and crd.type != 7:
-						self.lastType = crd.type
-					if self.cardsFlipped == 1 and crd.type != 7:
-						if self.lastType == crd.type:
-							self.matchFound = 1
-					if crd.type != 7:
-						self.cardsFlipped = self.cardsFlipped + 1
-					else:
-						 sharkFound = 1
+					if crd.status != 1 and self.sharkFound != 1:
+						crd.status = 1
+						if self.cardsFlipped == 0 and crd.type != 7:
+							self.lastType = crd.type
+						if self.cardsFlipped == 1 and crd.type != 7:
+							if self.lastType == crd.type:
+								self.matchFound = 1
+								self.counter = 0
+						if crd.type != 7:
+							self.cardsFlipped = self.cardsFlipped + 1
+						else:
+							 sharkFound = 1
 		if self.cardsFlipped >= 2:
 			if self.counter > FPS*2:
 				if self.matchFound == 1:
@@ -96,7 +99,7 @@ class logicGame(scene.Scene):
 				self.counter = 0
 		if self.sharkFound == 1:
 			if self.counter > FPS*2:
-				self.totShark = self.totShark + 1
+				self.totShark += 1
 				self.counter = 0
 				self.lastType = 0
 				self.matchFound = 0
@@ -114,7 +117,8 @@ class logicGame(scene.Scene):
 			print "hello"
 		self.cardsLeft = 0
 	def update(self):
-		pass
+		self.counter += 1
+		print self.totShark
 	def render(self):
 		self.screen.fill((153, 102, 51))
 		for crd in self.cardList:
