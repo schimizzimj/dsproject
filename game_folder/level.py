@@ -82,11 +82,10 @@ class TopLevel(Level):
 							 	self.game.json['npcs'][1]['logic']['completed'] and \
 									self.game.json['npcs'][2]['logic']['completed'] and \
 										self.game.json['npcs'][3]['logic']['completed']:
-								self.game.director.change_scene(Library(self.game, 0))
+								self.game.change_level(Library(self.game, 0))
 							else:
-								# self.game.director.scene_stack.append(self.game.director.scene)
-								# self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, None, ["This door is locked."], False))
-								self.game.director.change_scene(Library(self.game, 0))
+								self.game.director.scene_stack.append(self.game.director.scene)
+								self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, None, ["This door is locked."], False))
 
 		if self.player.pos.x > 1455 and self.player.pos.x < 1492:
 			if self.player.pos.y == 1363 and self.player.dir.y == -1:
@@ -107,8 +106,7 @@ class TopLevel(Level):
 				 	self.game.json['npcs'][1]['logic']['completed'] and \
 						self.game.json['npcs'][2]['logic']['completed'] and \
 							self.game.json['npcs'][3]['logic']['completed']:
-					pass
-
+								self.game.change_level(Library(self.game, 0))
 
 	def update(self):
 		self.all_sprites.update()
@@ -369,12 +367,10 @@ class FitzpatrickLevel(Level):
 		self.game.background.blit(self.overlay_img, self.camera.apply_rect(self.map_rect))
 
 class Library(Level):
-	def __init__(self, game, room, entrance=0):
+	def __init__(self, game, entrance=0):
 		Level.__init__(self, game, entrance)
 		self.scale = 4
-		self.room = room
 		self.name = 'library'
-		self.counter = 0
 		self.load()
 
 	def load(self):
@@ -406,9 +402,8 @@ class Library(Level):
 					self.game.director.change_scene(self.game.director.scene_stack.pop()) # Return to menu
 				if event.key == pg.K_h:
 					self.draw_debug = not self.draw_debug
-		if self.counter >= 5:
-					#self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, "All", ["Congratulations!"], False))
-					pass
+		self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.director.screen, "All", ["Congratulations! You've won the game!"], False))
+
 
 	def update(self):
 		self.all_sprites.update()

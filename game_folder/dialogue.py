@@ -42,7 +42,10 @@ game_json = {
 		{
 			'name': 'Professor Brockman',
 			'rand': False,
-			'file': '',
+			'file': ['brockman/brockman1.png',
+					'brockman/brockman2.png',
+					'brockman/brockman3.png',
+					'brockman/brockman4.png'],
 			'dialogue': [
 				[
 				"Hey Player, your name came out of the bag!",
@@ -58,7 +61,11 @@ game_json = {
 				],
 				[
 				"Way to go! Thanks for coming to class!",
-				""
+				"Take a piece of candy on your way out!"
+				],
+				[
+				"When you debug, are you debugging your code...",
+				"Or are you debugging yourself?"
 				]
 			],
 			'logic': {
@@ -94,7 +101,10 @@ game_json = {
 		{
 			'name': 'Professor Kumar',
 			'rand': False,
-			'file': '',
+			'file': ['kumar/kumar1.png',
+					'kumar/kumar2.png',
+					'kumar/kumar3.png',
+					'kumar/kumar4.png'],
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',

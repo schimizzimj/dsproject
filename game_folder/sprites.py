@@ -367,6 +367,7 @@ class NPC(pg.sprite.Sprite):
 			if not self.logic['spoken']:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
 				self.logic['spoken'] = True
+				self.logic['completed'] = True
 			else:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
 
@@ -376,6 +377,7 @@ class NPC(pg.sprite.Sprite):
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
 				self.logic['spoken'] = True
 			elif self.logic['spoken'] and not self.logic['completed']:
+				self.start_game(4)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
 			elif self.logic['completed']:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[4], False))
