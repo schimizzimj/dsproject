@@ -7,53 +7,100 @@ the file name of the spritesheet (although the NPC class must be updated).
 game_json = {
 	'npcs': [
 		{
-			'name': 'Professsor Bui',
+			'name': 'Professor Bui',
 			'rand': False,
-			'file': '',
+			'file': ['bui/bui1.png',
+					'bui/bui2.png',
+					'bui/bui3.png',
+					'bui/bui4.png'],
 			'dialogue': [
 				[
 					'~~WAKE ME UP! Wake me up inside.~~',
 					'Oh hello..',
-					'Welcome to Systems Programming!'
+					'Welcome to Systems Programming!',
+					'Normally I would start class...',
+					'but hackers are attacking the student machines!',
+					'I need you to use spidey to shoot down the viruses.',
+					'Use the arrow keys to aim and the up arrow to shoot webs.'
+				],
+				[
+					'That did not go to well.',
+					"I'll give you an extension then."
+				],
+				[
+					'You did it! Congrats!',
+					'~~City of stars, are you shining just for me?~~',
+					'~~City of stars...'
 				]
-			]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
 		},
 
 		{
-			'name': 'Professsor Brockman',
+			'name': 'Professor Brockman',
 			'rand': False,
 			'file': '',
 			'dialogue': [
 				[
 				'Welcome to Logic Design!',
 				'Are you ready for adventure?'
+				],
+				[
+				"I don't have a game.",
+				"Why don't I have a game?!"
 				]
-			]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
 		},
 
 		{
-			'name': 'Professsor Emrich',
+			'name': 'Professor Emrich',
 			'rand': False,
-			'file': './img/scott.png',
+			'file': ['emrich/emrich1.png',
+					'emrich/emrich2.png',
+					'emrich/emrich3.png',
+					'emrich/emrich4.png'],
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
 				'Are you ready for adventure?'
+				],
+				[
+				"I don't have a game.",
+				"Why don't I have a game?!"
 				]
-			]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
 		},
 
 		{
-			'name': 'Professsor Kumar',
+			'name': 'Professor Kumar',
 			'rand': False,
-			'file': './img/shreya.png',
+			'file': 'shreya.png',
 			'dialogue': [
 				[
 				'Welcome to Data Structures!',
 				'Thanks for coming down to the front.'
-                'Here\'s a million points'
+                "Here's a million points!"
+				],
+				[
+				"I think you've already completed the task.",
+				"Here's a million more points though!"
 				]
-			]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False
+			}
 		},
 
 		{
@@ -63,6 +110,40 @@ game_json = {
 				['SQUEAK'],
 				['Squeak squeak squeak squeak']
 			]
-		}
+		},
+		{
+			'name': 'Professor Bualuan',
+			'rand': False,
+			'file': ['bualuan/bualuan1.png',
+					'bualuan/bualuan2.png',
+					'bualuan/bualuan3.png',
+					'bualuan/bualuan4.png'],
+			'dialogue': [
+				[
+					'Hi, Professor. Can I please have my PIN number?'
+				],
+				[
+					'Sure. Just go and catch three squirrels first.'
+				],
+				[
+					'Good job! Here you go.'
+				],
+				[	
+					'6:55, good time!'
+				],
+				[
+					'7:50, better luck next semester.'
+				],
+				[
+					'Come to Salsa Night at Legends!'
+				]
+			],
+			'logic': {
+				'spoken': False,
+				'completed': False,
+				'squirrels': 0,
+				
+			}
+		},
 	]
 }

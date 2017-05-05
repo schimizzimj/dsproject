@@ -4,10 +4,12 @@ import pygame as pg
 from settings import *
 from tilemap import collide_hit_rect
 import spritesheet
+import os
 import random
 from datetime import datetime
 import math
 import textbox
+import systems
 vec = pg.math.Vector2
 
 def collide_with_walls(sprite, group, dir):
@@ -17,32 +19,39 @@ def collide_with_walls(sprite, group, dir):
 	if dir == 'x':
 		hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
 		if hits:
-			if hits[0].rect.centerx > sprite.hit_rect.centerx:
-				sprite.pos.x = hits[0].rect.left - sprite.hit_rect.width / 2
-			if hits[0].rect.centerx < sprite.hit_rect.centerx:
-				sprite.pos.x = hits[0].rect.right + sprite.hit_rect.width / 2
+			if hits[0].hit_rect.centerx > sprite.hit_rect.centerx:
+				sprite.pos.x = hits[0].hit_rect.left - sprite.hit_rect.width / 2
+			if hits[0].hit_rect.centerx < sprite.hit_rect.centerx:
+				sprite.pos.x = hits[0].hit_rect.right + sprite.hit_rect.width / 2
 			sprite.vel.x = 0
 			sprite.hit_rect.centerx = sprite.pos.x
 	if dir == 'y':
 		hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
 		if hits:
-			if hits[0].rect.centery > sprite.hit_rect.centery:
-				sprite.pos.y = hits[0].rect.top - sprite.hit_rect.height / 2
-			if hits[0].rect.centery < sprite.hit_rect.centery:
-				sprite.pos.y = hits[0].rect.bottom + sprite.hit_rect.height / 2
+			if hits[0].hit_rect.centery > sprite.hit_rect.centery:
+				sprite.pos.y = hits[0].hit_rect.top - sprite.hit_rect.height / 2
+			if hits[0].hit_rect.centery < sprite.hit_rect.centery:
+				sprite.pos.y = hits[0].hit_rect.bottom + sprite.hit_rect.height / 2
 			sprite.vel.y = 0
 			sprite.hit_rect.centery = sprite.pos.y
+
+def sprite_collide(sprite, group):
+	for member in group:
+		if pg.sprite.collide_rect(sprite, member):
+			return True
+	return False
 
 class Player(pg.sprite.Sprite):
 	def __init__(self, level, game, x, y, zoom):
 		self.groups = level.all_sprites
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
+		self.name = 'Player'
 		self.level = level
 		self.zoom = zoom # used to properly scale the player based on current environment
 
 		# Load player spritesheet
-		ss = spritesheet.spritesheet("img/lep.png")
+		ss = spritesheet.spritesheet(os.path.join(IMG_FOLDER, "lep.png"))
 
 		# These will store the images for the player sprite animations
 		self.img_up = []
@@ -97,7 +106,7 @@ class Player(pg.sprite.Sprite):
 
 
 	def get_keys(self):
-		#self.vel = vec(0, 0)
+		self.vel = vec(0, 0)
 		keys = pg.key.get_pressed()
 		if keys[pg.K_UP] or keys[pg.K_w]:
 			frame = (self.pos.y // 30) % len(self.img_up)
@@ -127,6 +136,7 @@ class Player(pg.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.inflate_ip(self.rect.width * self.zoom, self.rect.height * self.zoom)
 		self.rect.center = self.pos
+		self.prev = self.pos
 		self.pos += self.vel * self.game.dt
 		self.hit_rect.centerx = self.pos.x
 		collide_with_walls(self, self.level.walls, 'x')
@@ -145,6 +155,7 @@ class Obstacle(pg.sprite.Sprite):
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
 		self.rect = pg.Rect(x, y, w, h)
+		self.hit_rect = self.rect
 		self.x = x
 		self.y = y
 		self.rect.x = x
@@ -155,13 +166,14 @@ class Squirrels(pg.sprite.Sprite):
 		self.groups = level.all_sprites, level.squirrels
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.game = game
+		self.name = 'Squirrel'
 		self.level = level
 		random.seed(datetime.now())
 		self.zoom = zoom
 		self.speech = game.json['npcs'][4]
 
 		# Load player spritesheet
-		ss = spritesheet.spritesheet("img/squirrel.png")
+		ss = spritesheet.spritesheet(os.path.join(IMG_FOLDER, "squirrel.png"))
 
 		# These will store the images for the player sprite animations
 		self.img_up = []
@@ -262,22 +274,22 @@ class Squirrels(pg.sprite.Sprite):
 
 class NPC(pg.sprite.Sprite):
 	def __init__(self, level, data, x, y, dir='s'):
-		self.groups = level.npcs, level.walls, level.all_sprites
+		self.groups = level.npcs, level.all_sprites, level.walls
 		pg.sprite.Sprite.__init__(self, self.groups)
 		self.pos = vec(x, y)
 		self.rand = data['rand']
 		self.dialogue = data['dialogue']
 		self.name = data['name']
-		img_file = data['file']
+		self.logic = data['logic']
+		img_files = data['file']
 		self.level = level
 		self.zoom = 1
 		self.game = level.game
-		if img_file:
-			ss = spritesheet.spritesheet(img_file)
-			self.img_down = ss.image_at((42, 0, 35, 40), colorkey = BLACK)
-			self.img_right = ss.image_at((42, 41, 35, 40), colorkey = BLACK)
-			self.img_up = ss.image_at((42, 81, 35, 40), colorkey = BLACK)
-			self.img_left = ss.image_at((42, 121, 35, 40), colorkey = BLACK)
+		if img_files:
+			self.img_down = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[0])), (32, 48))
+			self.img_up = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[1])), (32, 48))
+			self.img_left = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[2])), (32, 48))
+			self.img_right = pg.transform.scale(pg.image.load(os.path.join(IMG_FOLDER, img_files[3])), (32, 48))
 		else:
 			self.img_up = pg.Surface((32, 48))
 			self.img_left = pg.Surface((32, 48))
@@ -296,27 +308,90 @@ class NPC(pg.sprite.Sprite):
 		elif dir is 'e' or 'E':
 			self.image = self.img_right
 		self.rect = self.image.get_rect()
-		self.rect.x = x
-		self.rect.y = y
+		self.rect = self.rect.inflate(self.rect.width * self.zoom, self.rect.height * self.zoom)
+		self.rect.center = self.pos
+		self.hit_rect = NPC_HIT_RECT.inflate(NPC_HIT_RECT.width, NPC_HIT_RECT.height)
+		self.hit_rect.center = (self.rect.center[0], self.rect.center[1])
 
 
 	def events(self):
 		player = self.level.player
-		print self.pos.distance_to(player.pos)
 		if self.pos.distance_to(player.pos) < 80:
 			if player.dir.x == -1 and self.pos.x < player.pos.x:
 				self.image = self.img_right
+				self.game.director.scene.render()
 				self.game.director.scene_stack.append(self.game.director.scene)
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.speak()
 			elif player.dir.x == 1 and self.pos.x > player.pos.x:
 				self.image = self.img_left
+				self.game.director.scene.render()
 				self.game.director.scene_stack.append(self.game.director.scene)
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.speak()
 			elif player.dir.y == -1 and self.pos.y < player.pos.y:
 				self.image = self.img_down
+				self.game.director.scene.render()
 				self.game.director.scene_stack.append(self.game.director.scene)
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.speak()
 			elif player.dir.y == 1 and self.pos.y > player.pos.y:
 				self.image = self.img_up
+				self.game.director.scene.render()
 				self.game.director.scene_stack.append(self.game.director.scene)
+				self.speak()
+
+	def speak(self):
+		print self.name
+		if self.name == 'Professor Bui':
+			print self.logic['spoken']
+			if not self.logic['spoken']:
+				self.start_game(1)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			elif self.logic['spoken'] and not self.logic['completed']:
+				self.start_game(1)
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+			elif self.logic['completed']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
+
+		elif self.name is 'Professor Emrich':
+			if not self.logic['spoken']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			else:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
+		elif self.name is 'Professor Kumar':
+			if not self.logic['spoken']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			else:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
+		elif self.name is 'Professor Brockman':
+			if not self.logic['spoken']:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			else:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
+		elif self.name is 'Professor Bualuan':
+			if not self.logic['spoken']:
+				self.start_game(2)
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.game.level.player.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
+			elif self.logic['squirrels'] >= 3:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
+				randnum = random.random()
+				if randnum >= 0.5:
+					self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[3], False))
+				else:
+					self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[4], False))
+			else:
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[5], False))
+
+
+	def start_game(self, game):
+		if game is 1:
+			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
+		if game is 2:
+			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+
