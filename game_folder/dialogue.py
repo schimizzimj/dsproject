@@ -45,15 +45,24 @@ game_json = {
 			'file': '',
 			'dialogue': [
 				[
-				'Welcome to Logic Design!',
-				'Are you ready for adventure?'
+				"Hey Player, your name came out of the bag!",
+				"You've been voluntold to come up to the board and show off your knowledge of logic gates!"
 				],
 				[
-				"I don't have a game.",
-				"Why don't I have a game?!"
+				'Flip the cards to match the logic gates...',
+				"BUT DON'T GET BITTEN!"
+				],
+				[
+				"Aww... you got bit!",
+				"Try again and there might be some raisins in it for you!"
+				],
+				[
+				"Way to go! Thanks for coming to class!",
+				""
 				]
 			],
 			'logic': {
+				'called': False,
 				'spoken': False,
 				'completed': False
 			}
