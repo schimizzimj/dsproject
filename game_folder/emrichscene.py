@@ -103,6 +103,7 @@ class DataStructures(scene.Scene):
 			self.drawARect()
 		self.changed = False
 
+<<<<<<< HEAD
 	def drawButton(self):
 		#global xe, ye, he, we
 		length = 80
@@ -155,6 +156,60 @@ class DataStructures(scene.Scene):
 			self.game.director.change_scene(self.game.director.scene_stack[-1])
 			self.game.director.scene.render()
 			self.game.director.change_scene(self.post_win)
+=======
+    def drawButton(self):
+        #global xe, ye, he, we
+        length = 80
+        self.he = length
+        self.we = length/2
+        self.xe = WIDTH/2 - length/2
+        self.ye = 4*HEIGHT/5
+        pg.draw.ellipse(self.screen, (0,255,0), pg.Rect(self.xe, self.ye, length, length/2))
+        self.screen.blit(self.font.render("Done", True, BLACK), (WIDTH/2-length/4, 4*HEIGHT/5+length/6))
+
+    def drawBSTRect(self):
+        #global xBST, yBST
+        rect = pg.draw.rect(self.screen, TEAL, pg.Rect(self.xBST, self.yBST, self.w, self.h))
+        pg.display.update()
+        self.addText(self.xBST+10, self.yBST, self.h, "Binary Search Tree")
+
+    def drawLLRect(self):
+        # global xLL, yLL
+        rect = pg.draw.rect(self.screen, TEAL, pg.Rect(self.xLL, self.yLL, self.w, self.h))
+        pg.display.update()
+        self.addText(self.xLL+10, self.yLL, self.h, "Single Linked List")
+
+    def drawARect(self):
+        # global xA, yA
+        rect = pg.draw.rect(self.screen, TEAL, pg.Rect(self.xA, self.yA, self.w, self.h))
+        pg.display.update()
+        self.addText(self.xA+self.w/3, self.yA, self.h, "Array")
+
+    def addText(self, xT, yT, h, label):
+        self.screen.blit(self.font.render(label, True, BLACK), (xT, yT+h/2))
+        pg.display.update()
+
+    def holding(self):
+        #global pressed, coords
+        if self.pressed:
+            self.coords = pg.mouse.get_pos()
+
+    def drawHeader(self):
+        # header
+        self.screen.blit(self.font.render("Drag the data structures in smallest to largest average time complexity of accessing an element.", True, BLACK), (WIDTH/10, HEIGHT/13))
+        self.screen.blit(self.font.render("Put the smallest time complexity closest to the left side of the screen and the largest closest to the right side.", True, BLACK), (WIDTH/7, HEIGHT/13+20))
+	self.screen.blit(self.font.render("*in case you didn't pay attention in class: the order is array, bst, linked list.", True, BLACK), (WIDTH/5, HEIGHT/13+40))
+        self.screen.blit(self.font.render("Press the green button when done.", True, BLACK), (WIDTH/3, HEIGHT/13+60))
+
+    def endGame(self):
+        #self.screen.fill(TEAL)
+        #bigFont = pg.font.Font(pg.font.get_default_font(), 48)
+        if self.xA < self.xBST < self.xLL:
+		self.game.json['npcs'][0]['logic']['completed'] = True
+		self.game.director.change_scene(self.game.director.scene_stack[-1])
+		self.game.director.scene.render()
+		self.game.director.change_scene(self.post_win)
+>>>>>>> 99b62077c8020b9697b209abbb2a484cb7e1df50
          #   self.screen.blit(bigFont.render("Correct!", True, WHITE), (WIDTH/3, HEIGHT/2))
 	# lose, go back
 		else:
