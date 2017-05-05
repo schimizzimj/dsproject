@@ -20,33 +20,33 @@ class card(object):
 		self.y = y
 		self.wid = 3 * sw / 16
 		self.hei = 3 * sh / 16
-		self.flipped = 0
+		self.status = 0
 		if type == 1:
-			self.img = pygame.image.load(os.path.join(IMG_FOLDER, "andgate.png"))
-			self.img = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
+			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "andgate.png"))
+			self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
 		if type == 2:
-			self.img = pygame.image.load(os.path.join(IMG_FOLDER, "orgate.png"))
-			self.img = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
+			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "orgate.png"))
+			self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
 		if type == 3:
-			self.img = pygame.image.load(os.path.join(IMG_FOLDER, "nandgate.png"))
-			self.img = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
+			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "nandgate.png"))
+			self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
 		if type == 4:
-			self.img = pygame.image.load(os.path.join(IMG_FOLDER, "norgate.png"))
-			self.img = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
+			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "norgate.png"))
+			self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
 		if type == 5:
-			self.img = pygame.image.load(os.path.join(IMG_FOLDER, "notgate.png"))
-			self.img = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
+			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "notgate.png"))
+			self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
 		if type == 6:
-			self.img = pygame.image.load(os.path.join(IMG_FOLDER, "xorgate.png"))
-			self.img = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
+			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "xorgate.png"))
+			self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
 		if type == 7:
-			self.img = pygame.image.load(os.path.join(IMG_FOLDER, "shark.png"))
-			self.img = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
+			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "shark.png"))
+			self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*wr), int(self.image.get_height()*hr)))
 	def draw(self, screen):
 		pygame.draw.rect(screen, (102, 255, 255), (self.x-self.wid/2, self.y-self.hei/2, self.wid, self.hei), 0)
 		if self.status == 1:
 			screen.blit(self.image, (self.x - self.image.get_width()/2, self.y-self.image.get_height()/2))
-		
+
 class logicGame(scene.Scene):
 	def __init__(self, director, game, post_win):
 		scene.Scene.__init__(self, director)
@@ -73,9 +73,9 @@ class logicGame(scene.Scene):
 			for crd in self.cardList:
 				if abs(crd.x - self.coords[0]) < crd.wid/2 and abs(crd.y-self.coords[1]) < crd.hei/2:
 					crd.status = 1
-					if cardsFlipped == 0 and crd.type != 7:
+					if self.cardsFlipped == 0 and crd.type != 7:
 						self.lastType = crd.type
-					if cardsFlipped == 1 and crd.type != 7:
+					if self.cardsFlipped == 1 and crd.type != 7:
 						if self.lastType == crd.type:
 							self.matchFound = 1
 					if crd.type != 7:

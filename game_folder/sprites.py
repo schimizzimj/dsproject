@@ -11,6 +11,7 @@ import math
 import textbox
 import systems
 import emrichscene
+import logicdesign
 vec = pg.math.Vector2
 
 def collide_with_walls(sprite, group, dir):
@@ -354,29 +355,34 @@ class NPC(pg.sprite.Sprite):
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
 
 		elif self.name == 'Professor Emrich':
+<<<<<<< HEAD
 			
+=======
+
+>>>>>>> 2b0e89b35d040af038556449066abdeccf8cda28
 			if not self.logic['spoken']:
-                		self.start_game(3)
-                		self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
-                		self.logic['spoken'] = True
+				#self.start_game(3)
+				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+				self.logic['spoken'] = True
 			else:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
 
-		elif self.name is 'Professor Kumar':
+		elif self.name == 'Professor Kumar':
 			if not self.logic['spoken']:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
 				self.logic['spoken'] = True
 			else:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
 
-		elif self.name is 'Professor Brockman':
+		elif self.name == 'Professor Brockman':
 			if not self.logic['spoken']:
+				self.start_game(4)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
 				self.logic['spoken'] = True
 			else:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
 
-		elif self.name is 'Professor Bualuan':
+		elif self.name == 'Professor Bualuan':
 			if not self.logic['spoken']:
 				self.start_game(2)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.game.level.player.name, self.dialogue[0], False))
@@ -390,6 +396,8 @@ class NPC(pg.sprite.Sprite):
 					self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[4], False))
 			else:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[5], False))
+		else:
+			print "sadness"
 
 
 	def start_game(self, game):
@@ -397,7 +405,16 @@ class NPC(pg.sprite.Sprite):
 			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
 		if game is 2:
 			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+<<<<<<< HEAD
         	# data structures emrich
 		if game is 3:
 			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
 
+=======
+
+        	# data structures emrich
+		if game is 3:
+			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
+		if game is 4:
+			self.game.director.scene_stack.append(logicdesign.logicGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
+>>>>>>> 2b0e89b35d040af038556449066abdeccf8cda28
