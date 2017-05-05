@@ -10,6 +10,7 @@ from datetime import datetime
 import math
 import textbox
 import systems
+import emrichscene
 vec = pg.math.Vector2
 
 def collide_with_walls(sprite, group, dir):
@@ -343,7 +344,7 @@ class NPC(pg.sprite.Sprite):
 		if self.name == 'Professor Bui':
 			print self.logic['spoken']
 			if not self.logic['spoken']:
-				self.start_game(1)
+		                self.start_game(1)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
 				self.logic['spoken'] = True
 			elif self.logic['spoken'] and not self.logic['completed']:
@@ -355,8 +356,9 @@ class NPC(pg.sprite.Sprite):
 		elif self.name is 'Professor Emrich':
 			
 			if not self.logic['spoken']:
-				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
-				self.logic['spoken'] = True
+                		self.start_game(3)
+                		self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
+                		self.logic['spoken'] = True
 			else:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
 
@@ -395,3 +397,10 @@ class NPC(pg.sprite.Sprite):
 			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
 		if game is 2:
 			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
+<<<<<<< HEAD
+=======
+        	# data structures emrich
+	        if game is 3:
+			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
+
+>>>>>>> 7c1c4bc266a4972a8b8400ecde0e938e3500ad15
