@@ -341,11 +341,9 @@ class NPC(pg.sprite.Sprite):
 				self.speak()
 
 	def speak(self):
-		print self.name
 		if self.name == 'Professor Bui':
-			print self.logic['spoken']
 			if not self.logic['spoken']:
-		                self.start_game(1)
+				self.start_game(1)
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[0], False))
 				self.logic['spoken'] = True
 			elif self.logic['spoken'] and not self.logic['completed']:
@@ -409,5 +407,7 @@ class NPC(pg.sprite.Sprite):
         	# data structures emrich
 		if game is 3:
 			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
+
 		if game is 4:
 			self.game.director.scene_stack.append(logicdesign.logicGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[3], False)))
+

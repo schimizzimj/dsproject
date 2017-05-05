@@ -223,6 +223,8 @@ class ClassroomLevel(Level):
 		self.room = room
 		self.name = 'classroom'
 		self.load()
+		print "here"
+
 
 	def load(self):
 		if self.room is 102:
@@ -245,10 +247,7 @@ class ClassroomLevel(Level):
 				sprites.Obstacle(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y,
 					self.scale*tile_object.width, self.scale*tile_object.height)
 			if tile_object.name == 'NPC':
-				if self.game.json['npcs']['Professor Emrich']['logic'] == 'completed':
-					sprites.NPC(self, self.game.json['npcs'][int((tile_object.json))+1)], self.scale*tile_object.x, self.scale*tile_object.y)
-				else:		
-					sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
+				self.npc = sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
 			if tile_object.name == 'player' and int(tile_object.entrance) == self.entrance:
 				self.player = sprites.Player(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y, 1)
 		self.camera = tilemap.Camera(self.scale*self.map.width, self.scale*self.map.height)
@@ -274,6 +273,12 @@ class ClassroomLevel(Level):
 	def update(self):
 		self.all_sprites.update()
 		self.camera.update(self.player)
+		if self.room is 101 and not self.game.json['npcs'][1]['logic']['called']:
+			self.game.director.scene.render()
+			self.game.director.scene_stack.append(self.game.director.scene)
+			self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, "Professor Brockman", self.game.json['npcs'][1]['dialogue'][0], False))
+			self.game.json['npcs'][1]['logic']['called'] = True
+
 
 	def render(self):
 		self.game.background.blit(self.map_img, self.camera.apply_rect(self.map_rect))
