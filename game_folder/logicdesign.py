@@ -52,6 +52,7 @@ class logicGame(scene.Scene):
 		scene.Scene.__init__(self, director)
 		self.game = game
 		self.screen = game.screen
+		self.post_win = post_win
 		self.font = pygame.font.Font(None, 35)
 		self.lastType = 0
 		self.matchFound = 0
@@ -69,6 +70,7 @@ class logicGame(scene.Scene):
 
 	def events(self):
 		event = pygame.event.poll()
+		print self.cardsFlipped
 		if event.type == pygame.MOUSEBUTTONDOWN and self.cardsFlipped < 2:
 			self.coords = pygame.mouse.get_pos()
 			for crd in self.cardList:
@@ -84,8 +86,9 @@ class logicGame(scene.Scene):
 						if crd.type != 7:
 							self.cardsFlipped = self.cardsFlipped + 1
 						else:
-							 sharkFound = 1
+							 self.sharkFound = 1
 		if self.cardsFlipped >= 2:
+			self.counter += 1
 			if self.counter > FPS*2:
 				if self.matchFound == 1:
 					self.cardList = [crd for crd in self.cardList if crd.status == 0]
@@ -97,6 +100,7 @@ class logicGame(scene.Scene):
 				self.matchFound = 0
 				self.counter = 0
 		if self.sharkFound == 1:
+			self.counter += 1
 			if self.counter > FPS*2:
 				self.totShark += 1
 				self.counter = 0
@@ -112,12 +116,13 @@ class logicGame(scene.Scene):
 			if crd.type != 7:
 				self.cardsLeft = self.cardsLeft + 1
 		if self.cardsLeft == 0:
-			########
-			print "hello"
+			self.game.json['npcs'][1]['logic']['completed'] = True
+			self.game.director.change_scene(self.game.director.scene_stack[-1])
+			self.game.director.scene.render()
+			self.game.director.change_scene(self.post_win)
 		self.cardsLeft = 0
 	def update(self):
-		self.counter += 1
-		print self.totShark
+		pass
 	def render(self):
 		self.screen.fill((153, 102, 51))
 		for crd in self.cardList:
