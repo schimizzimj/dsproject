@@ -353,7 +353,7 @@ class NPC(pg.sprite.Sprite):
 			elif self.logic['completed']:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False))
 
-		elif self.name is 'Professor Emrich':
+		elif self.name == 'Professor Emrich':
 			
 			if not self.logic['spoken']:
                 		self.start_game(3)
@@ -397,10 +397,7 @@ class NPC(pg.sprite.Sprite):
 			self.game.director.scene_stack.append(systems.SpideyGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[2], False)))
 		if game is 2:
 			self.game.director.scene_stack.append(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False))
-<<<<<<< HEAD
-=======
         	# data structures emrich
-	        if game is 3:
+		if game is 3:
 			self.game.director.scene_stack.append(emrichscene.DataStructures(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[1], False)))
 
->>>>>>> 7c1c4bc266a4972a8b8400ecde0e938e3500ad15
