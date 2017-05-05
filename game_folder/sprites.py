@@ -412,3 +412,4 @@ class NPC(pg.sprite.Sprite):
 
 		if game is 4:
 			self.game.director.scene_stack.append(logicdesign.logicGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[3], False)))
+

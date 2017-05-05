@@ -245,7 +245,10 @@ class ClassroomLevel(Level):
 				sprites.Obstacle(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y,
 					self.scale*tile_object.width, self.scale*tile_object.height)
 			if tile_object.name == 'NPC':
-				self.npc = sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
+				if self.game.json['npcs'][int(tile_object.json)]['name'] == 'Professor Emrich' and self.game.json['npcs'][int(tile_object.json)]['logic']['completed']:
+					self.npc = sprites.NPC(self, self.game.json['npcs'][(int(tile_object.json))+1], self.scale*tile_object.x, self.scale*tile_object.y)
+				else:
+					self.npc = sprites.NPC(self, self.game.json['npcs'][int(tile_object.json)], self.scale*tile_object.x, self.scale*tile_object.y)
 			if tile_object.name == 'player' and int(tile_object.entrance) == self.entrance:
 				self.player = sprites.Player(self, self.game, self.scale*tile_object.x, self.scale*tile_object.y, 1)
 		self.camera = tilemap.Camera(self.scale*self.map.width, self.scale*self.map.height)
