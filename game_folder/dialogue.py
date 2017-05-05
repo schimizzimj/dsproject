@@ -120,23 +120,26 @@ game_json = {
 					'bualuan/bualuan4.png'],
 			'dialogue': [
 				[
-					'Hi, what is your last name?'
+					'Hi, Professor. Can I please have my PIN number?'
 				],
 				[
-					'Do you know the course number for Data Structures?'
+					'Sure. Just go and catch three squirrels first.'
 				],
 				[
-					'Are you sure you know what courses you have to take?'
-					'Okay, here you go.'
+					'Good job! Here you go.'
 				],
 				[	
 					'6:55, good time!'
+				],
+				[
 					'7:50, better luck next semester.'
 				]
 			],
 			'logic': {
 				'spoken': False,
-				'completed': False
+				'completed': False,
+				'squirrels': 0,
+				
 			}
 		},
 	]
