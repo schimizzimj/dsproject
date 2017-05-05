@@ -153,7 +153,7 @@ class DataStructures(scene.Scene):
 
     def drawHeader(self):
         # header
-        self.screen.blit(self.font.render("Drag the data structures in smallest to largest average time complexity of accessing an element.", True, BLACK), (WIDTH+10, HEIGHT/13))
+        self.screen.blit(self.font.render("Drag the data structures in smallest to largest average time complexity of accessing an element.", True, BLACK), (WIDTH/10, HEIGHT/13))
         self.screen.blit(self.font.render("Put the smallest time complexity closest to the left side of the screen and the largest closest to the right side.", True, BLACK), (WIDTH/7, HEIGHT/13+20))
 	self.screen.blit(self.font.render("*in case you didn't pay attention in class: the order is array, bst, linked list.", True, BLACK), (WIDTH/5, HEIGHT/13+40))
         self.screen.blit(self.font.render("Press the green button when done.", True, BLACK), (WIDTH/3, HEIGHT/13+60))
