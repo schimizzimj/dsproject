@@ -79,8 +79,12 @@ game_json = {
 				[
 				'Welcome to Data Structures!',
 				'Are you ready for adventure?'
-				],
-				[
+                ],
+                [
+                'Congrats!',
+                'You are ready for an interview'
+                ],
+                [
 				"I don't have a game.",
 				"Why don't I have a game?!"
 				]

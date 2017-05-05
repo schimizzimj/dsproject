@@ -204,7 +204,8 @@ class DataStructures(scene.Scene):
 		#self.screen.fill(TEAL)
 		#bigFont = pg.font.Font(pg.font.get_default_font(), 48)
 		if self.xA < self.xBST < self.xLL:
-			self.game.json['npcs'][0]['logic']['completed'] = True
+			self.game.json['npcs'][2]['logic']['completed'] = True
+			print "done"
 			self.game.director.change_scene(self.game.director.scene_stack[-1])
 			self.game.director.scene.render()
 			self.game.director.change_scene(self.post_win)
