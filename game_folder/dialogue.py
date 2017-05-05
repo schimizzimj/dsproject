@@ -16,7 +16,7 @@ game_json = {
 			'dialogue': [
 				[
 					'~~WAKE ME UP! Wake me up inside.~~',
-					'Oh hello..',
+					'Oh hello...',
 					'Welcome to Systems Programming!',
 					'Normally I would start class...',
 					'but hackers are attacking the student machines!',
@@ -89,11 +89,10 @@ game_json = {
                 ],
                 [
                 'Congrats!',
-                'You are ready for an interview'
+                'You are ready for an interview.'
                 ],
                 [
-				"I don't have a game.",
-				"Why don't I have a game?!"
+				"QUESTIIII-YONS!?"
 				]
 			],
 			'logic': {

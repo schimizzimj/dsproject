@@ -411,7 +411,6 @@ class Library(Level):
 	def update(self):
 		self.all_sprites.update()
 		self.camera.update(self.player)
-		self.counter += 1
 
 	def render(self):
 		self.game.background.blit(self.map_img, self.camera.apply_rect(self.map_rect))

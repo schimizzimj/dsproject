@@ -52,7 +52,7 @@ class spidey(object):
 		if self.angle > 5*3.141592/6:
 			self.status = 6
 			screen.blit(self.img6, (self.pos[0] - 0.06*sw, self.pos[1] - 0.06*sw))
-		#pygame.draw.line(screen, (255, 255, 255), (SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8-0.035*sw), (SCREEN_SIZE[0]/2 + 50*math.cos(self.angle), SCREEN_SIZE[1]*0.8 - 50*math.sin(self.angle)-0.035*sw))
+		pygame.draw.line(screen, (255, 255, 255), (SCREEN_SIZE[0]/2, SCREEN_SIZE[1]*0.8-0.035*sw), (SCREEN_SIZE[0]/2 + 50*math.cos(self.angle), SCREEN_SIZE[1]*0.8 - 50*math.sin(self.angle)-0.035*sw))
 class spidweb(object):
 	def __init__(self, ang, x, y):
 		self.vel = [3*math.cos(ang)*hr, -3*math.sin(ang)*hr]
@@ -120,7 +120,7 @@ class SpideyGame(scene.Scene):
 		self.enCounter = 0
 		self.swCounter = 1
 		self.enList = []
-		self.victory = 360
+		self.victory = 3600
 		self.spidey1 = spidey()
 		self.swList = []
 		self.post_win = post_win

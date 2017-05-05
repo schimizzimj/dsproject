@@ -9,20 +9,18 @@ import dialogue
 import textbox
 import scene
 
-sw = SCREEN_SIZE[0]
-sh = SCREEN_SIZE[1]
-wr = float(sw)/1920
-hr = float(sh)/1080
+SCREEN_SIZE[0] = SCREEN_SIZE[0]
+SCREEN_SIZE[1]= SCREEN_SIZE[1]
 
 class card(object):
 	def __init__(self, type, x, y):
 		self.type = type;
 		self.x = x
 		self.y = y
-		self.wid = 3 * sw / 16
-		self.hei = 3 * sh / 16
-		print SCREEN_SIZE
-		print self.wid
+		self.wid = 3 * SCREEN_SIZE[0] / 16
+		self.hei = 3 * SCREEN_SIZE[1]/ 16
+		wr = float(SCREEN_SIZE[0])/1920
+		hr = float(SCREEN_SIZE[1])/1080
 		self.status = 0
 		if type == 1:
 			self.image = pygame.image.load(os.path.join(IMG_FOLDER, "andgate.png"))
@@ -68,12 +66,11 @@ class logicGame(scene.Scene):
 		self.cardList = []
 		for p in [1, 2, 3, 4]:
 			for q in [1, 2, 3, 4]:
-				self.cardList.append(card(self.typeList.pop(), p*sw/4-sw/8, q*sh/4-sh/8))
+				self.cardList.append(card(self.typeList.pop(), p*SCREEN_SIZE[0]/4-SCREEN_SIZE[0]/8, q*SCREEN_SIZE[1]/4-SCREEN_SIZE[1]/8))
 		self.counter = 0
 
 	def events(self):
 		event = pygame.event.poll()
-		print self.cardsFlipped
 		if event.type == pygame.MOUSEBUTTONDOWN and self.cardsFlipped < 2:
 			self.coords = pygame.mouse.get_pos()
 			for crd in self.cardList:

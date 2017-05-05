@@ -398,7 +398,7 @@ class NPC(pg.sprite.Sprite):
 			else:
 				self.game.director.change_scene(textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[5], False))
 		else:
-			print "sadness"
+			print "sadness" # If you reach this line, sadness has fallen upon you. 
 
 
 	def start_game(self, game, option=0):
@@ -412,4 +412,3 @@ class NPC(pg.sprite.Sprite):
 
 		if game is 4:
 			self.game.director.scene_stack.append(logicdesign.logicGame(self.game.director, self.game, textbox.TextBox(self.game.director, self.game.screen, self.name, self.dialogue[3], False)))
-
